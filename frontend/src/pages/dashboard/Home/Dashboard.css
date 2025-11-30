@@ -1,0 +1,153 @@
+.dashboard-container {
+  margin-left: 60px;
+}
+
+.dashboard-container h2 {
+  font-size: 18px;
+  color: #6A6B70;
+  margin-bottom: 20px;
+}
+
+.dashboard-wrapper {
+  padding: 4px;
+}
+
+/* SEARCH BAR */
+.dash-search-wrapper {
+  position: relative;
+  width: 260px;
+  margin-bottom: 20px;
+}
+
+.dash-search-icon {
+  width: 16px;
+  position: absolute;
+  top: 14px;
+  left: 10px;
+  opacity: 0.6;
+}
+
+.dash-search-input {
+  width: 260px;
+  height: 44px;
+  padding-left: 34px;
+  background-color: #FBFBFB;
+  border: 1px solid #d9dfe8;
+  border-radius: 6px;
+  outline: none;
+  font-size: 12px;
+  color: #9aa4b2;
+}
+
+.dash-search-google-icon {
+  position: absolute;
+  top: 14px;
+  left: 10px;
+  font-size: 20px;
+  color: #9ca3af;
+}
+
+/* TABS */
+.dash-tabs {
+  display: flex;
+  gap: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 20px;
+}
+
+.tab {
+  background: none;
+  border: none;
+  font-size: 15px;
+  cursor: pointer;
+  padding-bottom: 6px;
+  color: #6b7280;
+}
+
+.tab.active {
+  color: #2f49d1;
+  font-weight: 500;
+  border-bottom: 2px solid #2f49d1;
+}
+
+/* =========================
+      TICKET CARD (UPDATED)
+   ========================= */
+.ticket-card {
+  width: 1295px;
+  height: 205px;
+
+  background: #fff;
+  padding: 18px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  margin-bottom: 16px;
+}
+
+.ticket-top {
+  display: flex;
+  justify-content: space-between;
+}
+
+.ticket-left {
+  display: flex;
+  gap: 12px;
+}
+
+.ticket-dot {
+  width: 13px;
+  height: 13px;
+  background: #f7c66b;
+  border-radius: 50%;
+}
+
+.ticket-id {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.ticket-msg {
+  font-size: 14px;
+  color: #4b5563;
+  margin-top: 6px;
+}
+
+.ticket-right {
+  text-align: right;
+}
+
+.ticket-posted {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+/* USER INFO BLOCK */
+.ticket-bottom {
+  display: flex;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.ticket-user {
+  display: flex;
+  gap: 12px;
+}
+
+.ticket-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.ticket-username {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.ticket-meta {
+  font-size: 12px;
+  color: #6b7280;
+}
+

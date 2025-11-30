@@ -1,0 +1,123 @@
+/* Main container */
+.login-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  background: #ffffff;
+}
+
+/* Left side */
+.login-left {
+  flex: 1;
+  padding: 40px 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+.login-logo {
+  width: 140px;
+  margin-bottom: 40px;
+}
+
+/* Inner content spacing */
+.login-content {
+  max-width: 592px;
+  margin-left: 140px;
+
+}
+
+.login-content h2 {
+  font-size: 24px;
+  margin-bottom: 25px;
+  color: #222;
+  font-weight: 600;
+}
+
+/* Form styling */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.login-form label {
+  font-size: 14px;
+  color: #333;
+}
+
+.login-form input {
+  padding: 12px;
+  border-radius: 9px;
+  border: 1px solid #dcdcdc;
+  font-size: 14px;
+}
+
+.login-form input:focus {
+  border-color: #6a6dff;
+  outline: none;
+}
+
+/* Login button */
+.login-btn {
+  margin-top: 18px;
+  width: 592px;
+  height: 48px;
+  background: #C3C3C3;
+  border: none;
+  border-radius: 64px;
+  color: white;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.login-btn:hover {
+  background: #b8b8b8;
+}
+
+/* Signup text */
+.signup-text {
+  margin-top: 35px;
+  font-size: 14px;
+  color: #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.signup-text span {
+  color: #6a6dff;
+  cursor: pointer;
+}
+
+.signup-text span:hover {
+  text-decoration: underline;
+}
+
+.last-text {
+  margin-top: 95px;
+  font-size: 14px;
+  color: #676B5F;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Right side image panel */
+.signup-right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.signup-image {
+  width: 541px;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Error text */
+.error {
+  color: red;
+  font-size: 14px;
+}

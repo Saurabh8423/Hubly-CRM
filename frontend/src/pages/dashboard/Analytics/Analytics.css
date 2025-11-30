@@ -1,0 +1,32 @@
+
+/* Analytics.css */
+.hb-analytics {
+  padding: 4px;
+  margin-left: 45px;
+}
+
+.hb-analytics-chart {
+  max-width: 900px;
+  margin-bottom: 20px;
+}
+
+.hb-analytics-row {
+  display: flex;
+  gap: 20px;
+  margin-top: 14px;
+}
+
+.hb-analytics-box {
+  background: #fff;
+  padding: 18px;
+  border-radius: 8px;
+  border: 1px solid #f0f2f4;
+  min-width: 260px;
+}
+
+.hb-big {
+  font-size: 20px;
+  color: #00c853;
+  font-weight: 700;
+  margin-top: 8px;
+}

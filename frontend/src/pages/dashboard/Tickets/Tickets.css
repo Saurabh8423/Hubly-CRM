@@ -1,0 +1,8 @@
+.tickets {
+  padding: 30px;
+}
+
+.tickets__title {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}

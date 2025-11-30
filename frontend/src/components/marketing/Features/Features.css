@@ -1,0 +1,125 @@
+.info-feature {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 48px 0;
+}
+
+/* CENTER TEXT BLOCK */
+.info-left {
+    flex: 1;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.info-left h2 {
+    font-size: 44px;
+    margin-bottom: 10px;
+    color: #30404D;
+}
+
+.info-lead {
+    font-size: 18px;
+    color: #6b7785;
+    max-width: 720px;
+    text-align: center;
+    margin: 0 auto 32px auto;
+}
+
+/* MAIN LEFT + RIGHT WRAPPER */
+.features-cards {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 1200px;
+    margin-top: 20px;
+}
+
+/* LEFT SIDE CARDS */
+.feature-cards-left {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.feature-card {
+    background: #FFFFFF;
+    width: 625px;
+    margin-bottom: 10px;
+}
+
+.feature-card h4 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    text-align: left;
+    color: #30404D;
+}
+
+.feature-card p {
+    font-size: 16px;
+    text-align: left;
+    color: #6b7785;
+}
+
+/* RIGHT SIDE IMAGES */
+.info-right {
+    width: 48%;
+    flex: 1;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+
+
+}
+
+.feature-upper {
+    position: absolute;
+    top: -80px;
+    left: 15%;
+    transform: translateX(-20%);
+    width: 295px;
+    height: 131px;
+    z-index: 20;
+    background: linear-gradient(to right, #eaf6ff, #eaf6ff);
+    padding: 0px 125px;
+    box-shadow: 0 10px 30px rgba(180, 220, 255, 0.35);
+
+}
+
+.feature-down {
+    width: 100%;
+    max-width: 478px;
+    border-radius: 10px;
+
+}
+
+/* IMAGES TOUCH EACH OTHER */
+.info-right img {
+    width: 475px;
+    display: block;
+    margin: 0;
+    padding: 0;
+    object-fit: cover;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+    .features-cards {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .feature-cards-left,
+    .info-right {
+        width: 100%;
+        align-items: center;
+    }
+
+    .info-right img {
+        max-width: 330px;
+    }
+}

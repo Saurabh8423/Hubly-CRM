@@ -1,0 +1,132 @@
+/* Main container */
+.signup-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  background: #ffffff;
+  /* overflow: hidden; */
+}
+
+.signup-logo {
+  width: 142px;
+  height: 45px;
+  margin-left: 30px;
+  margin-top: 20px;
+  margin-bottom: 25px;
+}
+
+/* Left section (Form) */
+.signup-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 90px;
+  margin-left: 70px;
+}
+
+/* Signup form */
+.signup-form {
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.signup-form h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 10px;
+}
+
+/* First + Last Name grouped */
+.name-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 17px;
+  font-weight: 500;
+  color: #444;
+}
+
+.name-group input {
+  flex: 1;
+}
+
+/* Input fields */
+.signup-form input {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #d2d2d2;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.signup-form input:focus {
+  border-color: #6a6dff;
+  box-shadow: 0 0 4px rgba(106, 109, 255, 0.3);
+}
+
+/* Terms line */
+.terms {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #555;
+}
+
+/* Submit button */
+.signup-btn {
+  width: 376px;
+  height: 45px;
+  background: #C3C3C3;
+  border: none;
+  color: white;
+  border-radius: 28px;
+  cursor: pointer;
+  font-size: 15px;
+  transition: 0.2s ease;
+}
+
+.signup-btn:hover {
+  background: #5558d8;
+}
+
+/* Signin link */
+.signin-link {
+  font-size: 14px;
+  color: #6a6dff;
+  cursor: pointer;
+  margin-top: 5px;
+}
+
+.signin-link:hover {
+  text-decoration: underline;
+}
+
+
+/* Right side image section */
+.signup-right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.signup-image {
+  width: 541px;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Error message styling */
+.error {
+  color: red;
+  font-size: 14px;
+}

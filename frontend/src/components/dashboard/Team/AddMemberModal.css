@@ -1,0 +1,86 @@
+/* Reuse modal-overlay styles if already loaded. If not, copy modal-overlay and modal-box styles. */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+}
+
+.modal-box.big {
+  width: 724px;
+  height: 516px;
+  border-radius: 28px;
+  padding: 28px;
+  background: #fff;
+  box-shadow: 0 18px 60px rgba(20,40,80,0.12);
+}
+
+.modal-box.big h2 {
+  margin: 0 0 6px 0;
+  font-size: 28px;
+  color: #1f2933;
+}
+
+.modal-desc {
+  color: #000000;
+  margin: 20px 0 42px;
+  font-size: 14px;
+  line-height: 165%;
+}
+
+.form-row {
+  margin-bottom: 12px;
+}
+.form-row label {
+  display: block;
+  margin-left: 5px;
+  font-size: 13px;
+  color: #000000;
+  margin-bottom: 6px;
+}
+.form-row input {
+  margin-top: 10px;
+  width: 97%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #e6eef7;
+  font-size: 14px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.save-btn {
+  background: #184E7F;
+  width: 160px;
+  height: 50px;
+  color: #FAFBFC;
+  border-radius: 15px;
+  border: none;
+  cursor: pointer;
+}
+.cancel-btn {
+  background: #ffffff;
+  width: 160px;
+  height: 50px;
+  color: #AFAFAF;
+  border-radius: 15px;
+  border: none;
+  cursor: pointer;
+}
+
+.designation-select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #e6eef7;
+  font-size: 14px;
+  background: #fff;
+}

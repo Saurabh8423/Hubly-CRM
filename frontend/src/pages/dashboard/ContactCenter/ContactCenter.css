@@ -1,0 +1,254 @@
+/* ContactCenter.css - vanilla CSS to mimic your screenshots */
+.hb-contact-wrap {
+  display: grid;
+  grid-template-columns: 300px 1fr 360px;
+  height: calc(100vh - 20px);
+  background: #f6f7f8;
+  margin-left: 25px;
+  box-sizing: border-box;
+  align-items: start;
+}
+
+/* left panel */
+.hb-left-panel {
+  background: #fff;
+  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid #eceff2;
+  height: 100%;
+  box-shadow: 0 6px 20px rgba(33, 48, 64, 0.04);
+}
+
+.hb-contact-wrap h2 {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #6A6B70;
+}
+
+.hb-left-header {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #6A6B70;
+}
+
+
+/* chat list */
+.hb-chat-list {
+  overflow-y: auto;
+  padding-right: 4px;
+  height: calc(100% - 80px);
+}
+
+.hb-chat-list h2{
+  margin-top: 50px;
+  font-size: 14px;
+  color: #888888;
+  border-bottom: 1px solid #888888;
+}
+
+.hb-chat-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background .15s;
+}
+
+.hb-chat-item.selected {
+  background: #f1f4f7;
+}
+
+.hb-chat-thumb img,
+.hb-msg-avatar,
+.td-avatar img,
+.td-item-avatar img {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.hb-msg-avatar {
+  margin-right: 8px;
+}
+
+
+.hb-chat-meta {
+  flex: 1;
+}
+
+.hb-chat-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #184f7c;
+}
+
+.hb-chat-last {
+  color: #8b98a6;
+  font-size: 12px;
+}
+
+.hb-chat-status {
+  font-size: 12px;
+  padding: 6px 8px;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid #eee;
+  color: #213040;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.hb-empty {
+  color: #7f8b94;
+  padding: 16px;
+}
+
+/* center panel */
+.hb-center-panel {
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #eceff2;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.hb-center-header {
+  padding: 16px;
+  border-bottom: 1px solid #f0f2f4;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  color: #213040;
+}
+
+.hb-message-area {
+  padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.hb-date-sep {
+  text-align: center;
+  color: #bfcbd2;
+  margin-bottom: 12px;
+}
+
+.hb-messages {
+  overflow-y: auto;
+  flex: 1;
+  padding: 8px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.hb-msg {
+  max-width: 70%;
+  padding: 10px 14px;
+  border-radius: 14px;
+}
+
+.hb-msg-user {
+  align-self: flex-end;
+  background: #e6f7ff;
+  color: #184f7c;
+}
+
+.hb-msg-agent {
+  align-self: flex-start;
+  background: #f1f3f5;
+  color: #213040;
+}
+
+.hb-no-messages {
+  color: #9aa6ad;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.hb-reply-area {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hb-reply-area textarea {
+  height: 80px;
+  resize: none;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #e6eef7;
+}
+
+.hb-send {
+  align-self: flex-end;
+  width: 44px;
+  height: 44px;
+  border-radius: 22px;
+  background: #184f7c;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+/* missed note */
+.hb-missed-note {
+  color: #d32f2f;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* right panel (ticket details) */
+.hb-right-panel {
+  background: #fff;
+  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid #eceff2;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.hb-right-panel h3 {
+  margin-top: 0;
+  color: #184f7c;
+}
+
+.hb-right-row {
+  margin-top: 10px;
+}
+
+.hb-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.hb-field input,
+.hb-field select {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #e6eef7;
+  background: #fbfdfe;
+}
+
+.hb-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+/* small utilities */
+.hb-home-icon {
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: #f4f6f8;
+}

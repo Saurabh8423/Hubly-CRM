@@ -1,0 +1,45 @@
+.hb-header {
+  background: transparent;
+  padding: 8px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.hb-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.hb-logo img {
+  height: 40px;
+}
+
+.hb-nav {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.hb-nav-link {
+  color: #213040;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 8px;
+}
+
+.hb-cta {
+  background: #184f7c;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+@media (max-width: 760px) {
+  .hb-nav {
+    display: none;
+  }
+}

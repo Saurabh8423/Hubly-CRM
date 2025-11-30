@@ -1,0 +1,80 @@
+.hb-fab {
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+    width: 56px;
+    height: 56px;
+    border-radius: 999px;
+    background: #184f7c;
+    color: white;
+    border: none;
+    box-shadow: 0 6px 24px rgba(33, 48, 64, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1200;
+}
+
+.hb-chat-panel {
+    position: fixed;
+    right: 22px;
+    bottom: 96px;
+    width: 340px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 16px 44px rgba(33, 48, 64, 0.16);
+    z-index: 1200;
+    overflow: hidden;
+}
+
+.hb-chat-header {
+    padding: 10px 14px;
+    background: linear-gradient(90deg, #2d4f72, #1a3b5b);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.hb-chat-title {
+    font-weight: 600;
+}
+
+.hb-chat-close {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.hb-chat-body {
+    padding: 12px;
+}
+
+.hb-chat-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.hb-chat-form input,
+.hb-chat-form textarea {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #e8eef6;
+}
+
+.hb-chat-submit {
+    margin-top: 8px;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    background: #184f7c;
+    color: white;
+}
+
+.hb-chat-thanks {
+    text-align: center;
+    padding: 12px;
+}

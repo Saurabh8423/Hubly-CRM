@@ -1,0 +1,40 @@
+/* global.css */
+
+html, body {
+  width: 100%;
+  height: 100%;
+  font-family: var(--font-main);
+  background: var(--background-light);
+  color: var(--text-color);
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Default transition for UI elements */
+* {
+  transition: 0.2s ease-in-out;
+}
+
+/* Utility Classes */
+.container {
+  width: 90%;
+  margin: 0 auto;
+  max-width: 1280px;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hidden {
+  display: none;
+}

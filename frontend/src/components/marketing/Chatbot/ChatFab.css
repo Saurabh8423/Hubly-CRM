@@ -1,0 +1,17 @@
+.hb-fab {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  background: #184f7c;
+  color: white;
+  border: none;
+  box-shadow: 0 6px 24px rgba(33,48,64,0.2);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index: 1500;
+}
+.hb-fab img { width:20px; height:20px; filter: invert(1); }

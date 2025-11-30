@@ -1,0 +1,78 @@
+.team-page {
+  margin-left: 50px;
+  padding: 5px;
+}
+
+.team-page h2 {
+  margin-bottom: 20px;
+   font-size: 18px;
+   font-weight: 500;
+   color: #6A6B70;
+}
+
+.team-table {
+  width: 100%;
+  margin-top: 30px;
+  border-collapse: collapse;
+}
+
+.team-table tr {
+  background: #ffffff;
+  border-top: 1px solid #000000;
+  border-bottom: 1px solid #000000;
+  padding: 16px;
+  width: 100%;
+  text-align: left;
+  font-weight: 600;
+  color: #184E7F;
+}
+
+.team-table th {
+  background: #ffffff;
+  border-top: 1px solid #000000;
+  border-bottom: 1px solid #000000;
+  padding: 16px;
+  text-align: left;
+  font-weight: 600;
+  color: #184E7F;
+}
+
+.team-table td {
+  padding: 16px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+  color: #2b3b46;
+}
+
+.edit-btn {
+  background: none;
+  border: none;
+  color: #000000;
+  cursor: pointer;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  color: #000000;
+  cursor: pointer;
+}
+
+.team-Add{
+  display: flex;
+  justify-content: flex-end;
+  padding: 30px;
+}
+
+.add-member-btn {
+  margin-left: 12px;
+  background: #184E7F;
+  color: #ffffff;
+  width: 160px;
+  height: 40px;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.no-users { text-align:center; padding:20px; color:#666; }
