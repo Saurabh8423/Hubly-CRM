@@ -1,9 +1,10 @@
-// ChatbotPage.jsx
 import React, { useEffect, useRef, useState } from "react";
 import { IoIosSend } from "react-icons/io";
 import Sidebar from "../../../components/dashboard/Sidebar/Sidebar";
 import logoImage from "../../../Assets/Ellipse 6.png";
 import "./Chatbot.css";
+import axios from "axios";
+
 
 const ChatbotPage = () => {
   const [message, setMessage] = useState("");
@@ -12,6 +13,9 @@ const ChatbotPage = () => {
     { text: "Ask me anything", sender: "bot" },
   ]);
   const [showForm, setShowForm] = useState(false);
+  const [timerActive, setTimerActive] = useState(false);
+  const [lastUserMessageTime, setLastUserMessageTime] = useState(null);
+  const missedTimerRef = useRef(null);
   const chatBodyRef = useRef(null);
 
   const [editableField, setEditableField] = useState(null);
@@ -44,8 +48,15 @@ const ChatbotPage = () => {
   const handleSendMessage = (e) => {
     e?.preventDefault();
     if (!message.trim()) return;
+
     setMessages((prev) => [...prev, { text: message.trim(), sender: "user" }]);
+
+    setLastUserMessageTime(Date.now());
+    setTimerActive(true);
+    startMissedChatTimer();
+
     setMessage("");
+
     if (!showForm) setShowForm(true);
   };
 
@@ -118,6 +129,43 @@ const ChatbotPage = () => {
     }
   }, []);
 
+  // ---------------------
+  //  START MISSED CHAT TIMER
+  // ---------------------
+  const startMissedChatTimer = () => {
+    if (missedTimerRef.current) clearTimeout(missedTimerRef.current);
+
+    missedTimerRef.current = setTimeout(() => {
+      console.log("10 MIN PASSED — CHAT MISSED!");
+
+      axios
+        .post("/api/tickets/missed")
+        .catch((err) => console.log("missed save error", err));
+    }, 10 * 60 * 1000); // 10 minutes
+  };
+
+  // ---------------------
+  //  WHEN ADMIN REPLIES (bot response)
+  // ---------------------
+  const adminReply = (text) => {
+    if (missedTimerRef.current) {
+      clearTimeout(missedTimerRef.current); // Stop timer 🔥
+    }
+    setTimerActive(false);
+
+    setMessages((prev) => [...prev, { text, sender: "bot" }]);
+  };
+
+  // Example auto reply
+  useEffect(() => {
+    if (messages.length > 0) {
+      const last = messages[messages.length - 1];
+      if (last.sender === "user") {
+        setTimeout(() => adminReply("Thanks for your message!"), 2000);
+      }
+    }
+  }, [messages]);
+
   return (
     <div className="chatbot-container">
       <Sidebar />
@@ -158,33 +206,42 @@ const ChatbotPage = () => {
                 <div className="chats-message bot form-message">
                   <h4>Introduce Yourself</h4>
                   <form onSubmit={handleFormSubmit}>
-                    <input
-                      type="text"
-                      placeholder={settings.formFields.name}
-                      value={formData.name}
-                      onChange={(e) =>
-                        setFormData({ ...formData, name: e.target.value })
-                      }
-                      required
-                    />
-                    <input
-                      type="tel"
-                      placeholder={settings.formFields.phone}
-                      value={formData.mobile}
-                      onChange={(e) =>
-                        setFormData({ ...formData, mobile: e.target.value })
-                      }
-                      required
-                    />
-                    <input
-                      type="email"
-                      placeholder={settings.formFields.email}
-                      value={formData.email}
-                      onChange={(e) =>
-                        setFormData({ ...formData, email: e.target.value })
-                      }
-                      required
-                    />
+                    <div>
+                      <lable>Your name</lable>
+                      <input
+                        type="text"
+                        placeholder={settings.formFields.name}
+                        value={formData.name}
+                        onChange={(e) =>
+                          setFormData({ ...formData, name: e.target.value })
+                        }
+                        required
+                      />
+                    </div>
+                    <div>
+                      <lable>Your Phone</lable>
+                      <input
+                        type="tel"
+                        placeholder={settings.formFields.phone}
+                        value={formData.mobile}
+                        onChange={(e) =>
+                          setFormData({ ...formData, mobile: e.target.value })
+                        }
+                        required
+                      />
+                    </div>
+                    <div>
+                      <lable1>Your Email</lable1>
+                      <input
+                        type="email"
+                        placeholder={settings.formFields.email}
+                        value={formData.email}
+                        onChange={(e) =>
+                          setFormData({ ...formData, email: e.target.value })
+                        }
+                        required
+                      />
+                    </div>
                     <button type="submit">Thank You</button>
                   </form>
                 </div>

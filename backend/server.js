@@ -15,7 +15,15 @@ import "./cronJobs/missedChatCron.js";
 dotenv.config();
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "https://hubly-crm-two.vercel.app/",
+    ],
+    credentials: true,
+  })
+);
+
 app.use(helmet());
 app.use(express.json());
 app.use(morgan("dev"));

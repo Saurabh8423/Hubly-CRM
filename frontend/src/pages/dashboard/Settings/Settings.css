@@ -67,10 +67,11 @@
   cursor: pointer;
   border-radius: 15px;
   font-size: 18px;
-  position: relative;
-  justify-content: end;
-  margin-left: 1050px;
+  align-self: flex-end;
+  /* right align button safely */
+  margin-top: 20px;
 }
+
 
 .save-settings-btn:hover {
   background: #396ae8;

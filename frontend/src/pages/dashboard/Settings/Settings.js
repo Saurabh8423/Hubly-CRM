@@ -3,10 +3,8 @@ import api from "../../../api/api";
 import "./Settings.css";
 
 const Settings = () => {
-  // Logged in user from localStorage
   const localUser = JSON.parse(localStorage.getItem("user"));
 
-  // Check if admin clicked edit on another user
   const savedEditUser = localStorage.getItem("editUser");
   const targetUser = savedEditUser ? JSON.parse(savedEditUser) : localUser;
 
@@ -32,11 +30,9 @@ const Settings = () => {
     }
   }, [targetUser]);
 
-  // Handle input change
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
-  // Save handler
   const handleSave = async (e) => {
     e.preventDefault();
 
@@ -47,13 +43,10 @@ const Settings = () => {
     const payload = {
       firstName: form.firstName,
       lastName: form.lastName,
-      phone: form.phone,
+      phone: form.phone, // <-- phone editable now
     };
 
-    // Admin can update email
-    if (localUser.role === "admin") {
-      payload.email = form.email;
-    }
+    // Email is NOT editable, so it is not included in payload
 
     if (form.password) {
       payload.password = form.password;
@@ -65,15 +58,12 @@ const Settings = () => {
 
       alert("Profile updated successfully");
 
-      // If user updated themselves → update localStorage
       if (localUser._id === targetUser._id) {
         localStorage.setItem("user", JSON.stringify(updatedUser));
       }
 
-      // Clear editUser memory
       localStorage.removeItem("editUser");
 
-      // If password changed → logout
       if (form.password) {
         alert("Password changed. Please login again.");
         localStorage.removeItem("user");
@@ -93,7 +83,7 @@ const Settings = () => {
         <h2 className="settings__title">Edit Profile</h2>
 
         <form className="edit-form" onSubmit={handleSave}>
-          
+
           <div className="form-group">
             <label>First Name</label>
             <input
@@ -113,12 +103,11 @@ const Settings = () => {
           </div>
 
           <div className="form-group">
-            <label>Email</label>
+            <label>Email (not editable)</label>
             <input
               name="email"
               value={form.email}
-              onChange={handleChange}
-              disabled={localUser.role !== "admin"} 
+              disabled
             />
           </div>
 
@@ -128,7 +117,6 @@ const Settings = () => {
               name="phone"
               value={form.phone}
               onChange={handleChange}
-              disabled={localUser.role !== "admin"}
             />
           </div>
 

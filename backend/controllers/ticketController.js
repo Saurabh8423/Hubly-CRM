@@ -106,15 +106,10 @@ export const getSingleTicket = async (req, res) => {
 
 /**
  * assignTicket
- * PUT /tickets/assign/:id
- * Body: { assignedTo } -> userId of teammate or null
- * Logic:
- * - If assignedTo is another user -> set assignedTo, set status "In Progress"
- * - If assignedTo is null -> assign back to admin (not implemented here)
  */
 export const assignTicket = async (req, res) => {
   try {
-    const ticketId = req.params.id;
+    const ticketId = req.params.ticketId;
     const { assignedTo } = req.body;
 
     const ticket = await Ticket.findById(ticketId);
@@ -140,8 +135,6 @@ export const assignTicket = async (req, res) => {
 
 /**
  * updateTicketStatus
- * PUT /tickets/status/:id  Body { status }
- * allowed statuses: Open, In Progress, Resolved, Missed
  */
 export const updateTicketStatus = async (req, res) => {
   try {
@@ -203,6 +196,98 @@ export const dashboardStats = async (req, res) => {
     });
   } catch (err) {
     console.error("dashboardStats ERROR:", err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+
+// ✔ NEW: Weekly analytics + real avg reply time + real resolved % + real chat count
+export const getTicketsAnalytics = async (req, res) => {
+  try {
+    const tickets = await Ticket.find().lean();
+    const messages = await Message.find().sort({ createdAt: 1 }).lean();
+
+    const now = new Date();
+
+    // ----------------------------------------------------
+    // 1️⃣ MISSED CHATS – LAST 10 WEEKS (REAL DATA)
+    // ----------------------------------------------------
+    const missedPerWeek = new Array(10).fill(0);
+
+    tickets.forEach((t) => {
+      if (t.status === "Missed") {
+        const diffWeeks = Math.floor(
+          (now - new Date(t.createdAt)) / (7 * 24 * 60 * 60 * 1000)
+        );
+
+        if (diffWeeks >= 0 && diffWeeks < 10) {
+          missedPerWeek[9 - diffWeeks]++; // newest on right side
+        }
+      }
+    });
+
+    // ----------------------------------------------------
+    // 2️⃣ AVERAGE REPLY TIME (REAL TIME)
+    // ----------------------------------------------------
+    // We detect: first customer message → first team reply
+    const replyTimes = {}; 
+
+    messages.forEach((msg) => {
+      const tid = msg.ticketId.toString();
+
+      // customer message (no senderId)
+      if (!msg.senderId) {
+        if (!replyTimes[tid]) replyTimes[tid] = { customer: msg.createdAt, team: null };
+      }
+
+      // team message (has senderId)
+      else {
+        if (replyTimes[tid] && !replyTimes[tid].team) {
+          replyTimes[tid].team = msg.createdAt;
+        }
+      }
+    });
+
+    const diffs = [];
+
+    Object.values(replyTimes).forEach((r) => {
+      if (r.customer && r.team) {
+        const diff = new Date(r.team) - new Date(r.customer);
+        if (diff > 0) diffs.push(diff);
+      }
+    });
+
+    const avgReplyMs = diffs.length
+      ? Math.round(diffs.reduce((a, b) => a + b, 0) / diffs.length)
+      : 0;
+
+    // ----------------------------------------------------
+    // 3️⃣ RESOLVED % (REAL DATA)
+    // ----------------------------------------------------
+    const totalTickets = tickets.length;
+    const resolvedTickets = tickets.filter((t) => t.status === "Resolved").length;
+
+    const resolvedPercent = totalTickets
+      ? Math.round((resolvedTickets / totalTickets) * 100)
+      : 0;
+
+    // ----------------------------------------------------
+    // 4️⃣ TOTAL CHATS COUNT (customer + team messages)
+    // ----------------------------------------------------
+    const totalChats = messages.length;
+
+    res.json({
+      success: true,
+      analytics: {
+        missedPerWeek,
+        avgReplyMs,
+        resolvedPercent,
+        totalChats,
+      },
+    });
+
+  } catch (err) {
+    console.error("ANALYTICS ERROR:", err);
     res.status(500).json({ success: false, message: "Server error" });
   }
 };

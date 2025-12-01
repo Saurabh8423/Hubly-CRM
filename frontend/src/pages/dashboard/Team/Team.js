@@ -93,22 +93,28 @@ const Team = () => {
     navigate(`/settings?userId=${id}`);
   };
 
+
   const handleAddSave = async (form) => {
     try {
-      await createUser({
+      const payload = {
         firstName: form.firstName,
-        lastName: form.lastName || "",
         email: form.email,
-        phone: form.phone || "",
-        role: form.designation === "Admin" ? "admin" : "member",
-      });
-      await loadUsers();
-      setOpenModal(false);
+        role: "member",
+        designation: form.designation,
+        password: form.email,  // auto-password = email
+        phone: ""              // optional
+      };
+
+      const res = await createUser(payload);
+
+      setUsers((prev) => [...prev, res.data.user]);
+      setOpenModal(false);   // ✅ FIXED
     } catch (err) {
       console.error("create user err", err);
-      alert(err.response?.data?.message || "Create failed");
+      alert(err.response?.data?.message || "User creation failed.");
     }
   };
+
 
   const isAdmin = currentUser?.role === "admin";
 
@@ -143,7 +149,7 @@ const Team = () => {
                 const isSelf =
                   currentUser &&
                   String(currentUser._id || currentUser.id) ===
-                    String(u._id || u.id);
+                  String(u._id || u.id);
 
                 // NEW Avatar logic (cached)
                 const avatar = getAvatar(u);
@@ -170,35 +176,29 @@ const Team = () => {
                     </td>
 
                     <td>
-                      {/* EDIT button visible only for Admin or Self */}
-                      <button
-                        className={`edit-btn ${
-                          !(isAdmin || isSelf) ? "disabled" : ""
-                        }`}
-                        onClick={() => {
-                          if (isAdmin || isSelf) {
-                            localStorage.setItem("editUser", JSON.stringify(u));
-                            navigate("/settings");
-                          }
-                        }}
-                        disabled={!(isAdmin || isSelf)}
-                      >
-                        🖍
-                      </button>
+                      {/* SHOW EDIT + DELETE ONLY IF USER IS MEMBER */}
+                      {u.role === "member" && (
+                        <>
+                          <button
+                            className="edit-btn"
+                            onClick={() => {
+                              localStorage.setItem("editUser", JSON.stringify(u));
+                              navigate("/dashboard/settings");
+                            }}
+                          >
+                            🖍
+                          </button>
 
-                      {/* DELETE button visible only for Admin or Self */}
-                      <button
-                        className={`delete-btn ${
-                          !(isAdmin || isSelf) ? "disabled" : ""
-                        }`}
-                        onClick={() => {
-                          if (isAdmin || isSelf) handleDelete(u._id || u.id);
-                        }}
-                        disabled={!(isAdmin || isSelf)}
-                      >
-                        🗑
-                      </button>
+                          <button
+                            className="delete-btn"
+                            onClick={() => handleDelete(u._id || u.id)}
+                          >
+                            🗑
+                          </button>
+                        </>
+                      )}
                     </td>
+
                   </tr>
                 );
               })
