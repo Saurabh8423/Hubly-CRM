@@ -5,22 +5,17 @@ import { useNavigate } from "react-router-dom";
 import "./Team.css";
 
 // =============================
-// NEW AVATAR CACHE + LOGIC
+// AVATAR CACHE + LOGIC
 // =============================
-
-// Load saved avatars from localStorage
 const avatarCache = JSON.parse(localStorage.getItem("teamAvatars")) || {};
 
-// New Avatar logic (based on first name → gender → cached)
 const getAvatar = (user) => {
   const userId = user._id || user.id;
 
-  // return from cache if exists
   if (avatarCache[userId]) {
     return avatarCache[userId];
   }
 
-  // gender guess by name ending with "a"
   const name = `${user.firstName || ""} ${user.lastName || ""}`.trim();
   const isFemale = name.toLowerCase().endsWith("a");
 
@@ -30,7 +25,6 @@ const getAvatar = (user) => {
     ? `https://randomuser.me/api/portraits/women/${randomIndex}.jpg`
     : `https://randomuser.me/api/portraits/men/${randomIndex}.jpg`;
 
-  // save to cache
   avatarCache[userId] = avatarURL;
   localStorage.setItem("teamAvatars", JSON.stringify(avatarCache));
 
@@ -45,13 +39,11 @@ const Team = () => {
 
   const navigate = useNavigate();
 
-  // Load users
   const loadUsers = async () => {
     try {
       setLoading(true);
       const res = await getUsers();
-      const data = res.data?.users || [];
-      setUsers(data);
+      setUsers(res.data?.users || []);
     } catch (err) {
       console.error("loadUsers err", err);
       setUsers([]);
@@ -60,13 +52,11 @@ const Team = () => {
     }
   };
 
-  // Load logged-in user
   const fetchCurrentUser = async () => {
     try {
       const stored = localStorage.getItem("user");
       if (stored) {
         setCurrentUser(JSON.parse(stored));
-        return;
       }
     } catch (err) {
       console.warn("Could not load current user", err);
@@ -82,17 +72,12 @@ const Team = () => {
     if (!window.confirm("Delete this user?")) return;
     try {
       await deleteUser(id);
-      await loadUsers();
+      loadUsers();
     } catch (err) {
       console.error("delete err", err);
       alert(err.response?.data?.message || "Delete failed");
     }
   };
-
-  const handleEdit = (id) => {
-    navigate(`/settings?userId=${id}`);
-  };
-
 
   const handleAddSave = async (form) => {
     try {
@@ -101,29 +86,26 @@ const Team = () => {
         email: form.email,
         role: "member",
         designation: form.designation,
-        password: form.email,  // auto-password = email
-        phone: ""              // optional
+        password: form.email,
+        phone: "",
       };
 
       const res = await createUser(payload);
 
       setUsers((prev) => [...prev, res.data.user]);
-      setOpenModal(false);   // ✅ FIXED
+      setOpenModal(false);
     } catch (err) {
       console.error("create user err", err);
       alert(err.response?.data?.message || "User creation failed.");
     }
   };
 
-
-  const isAdmin = currentUser?.role === "admin";
-
   return (
     <div className="team-page">
       <h2>Team</h2>
 
       {loading ? (
-        <div style={{ padding: 16 }}>Loading...</div>
+        <div className="loading">Loading...</div>
       ) : (
         <table className="team-table">
           <thead>
@@ -139,55 +121,42 @@ const Team = () => {
           <tbody>
             {users.length === 0 ? (
               <tr>
-                <td colSpan="5" style={{ textAlign: "center", padding: 20 }}>
-                  No users found.
-                </td>
+                <td colSpan="5" className="no-users">No users found.</td>
               </tr>
             ) : (
               users.map((u) => {
-                const role = (u.role || "").toLowerCase();
-                const isSelf =
-                  currentUser &&
-                  String(currentUser._id || currentUser.id) ===
-                  String(u._id || u.id);
-
-                // NEW Avatar logic (cached)
                 const avatar = getAvatar(u);
 
                 return (
                   <tr key={u._id || u.id}>
-                    <td style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                      <img
-                        src={avatar}
-                        alt="avatar"
-                        style={{
-                          width: 36,
-                          height: 36,
-                          borderRadius: "50%",
-                          objectFit: "cover",
-                        }}
-                      />
-                      <div>{`${u.firstName || ""} ${u.lastName || ""}`.trim()}</div>
+                    <td className="user-info">
+                      <img src={avatar} alt="avatar" className="avatar" />
+                      <span>{`${u.firstName || ""} ${u.lastName || ""}`.trim()}</span>
                     </td>
+
                     <td>{u.phone || "-"}</td>
                     <td>{u.email}</td>
-                    <td style={{ textTransform: "capitalize" }}>
-                      {role || "member"}
+                    <td className="role-text">
+                      {(u.role || "member").toLowerCase()}
                     </td>
 
                     <td>
-                      {/* SHOW EDIT + DELETE ONLY IF USER IS MEMBER */}
                       {u.role === "member" && (
                         <>
                           <button
                             className="edit-btn"
                             onClick={() => {
                               localStorage.setItem("editUser", JSON.stringify(u));
-                              navigate("/dashboard/settings");
+                              navigate("/dashboard/settings", {
+                                state: {
+                                  editUserId: u._id,
+                                },
+                              });
                             }}
                           >
                             🖍
                           </button>
+
 
                           <button
                             className="delete-btn"
@@ -198,7 +167,6 @@ const Team = () => {
                         </>
                       )}
                     </td>
-
                   </tr>
                 );
               })
@@ -207,7 +175,7 @@ const Team = () => {
         </table>
       )}
 
-      <div className="team-Add">
+      <div className="team-add">
         <button className="add-member-btn" onClick={() => setOpenModal(true)}>
           + Add Member
         </button>

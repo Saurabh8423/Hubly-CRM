@@ -5,74 +5,141 @@
 
 .team-page h2 {
   margin-bottom: 20px;
-   font-size: 18px;
-   font-weight: 500;
-   color: #6A6B70;
+  font-size: 18px;
+  font-weight: 500;
+  color: #6A6B70;
 }
 
+.loading {
+  padding: 16px;
+  font-size: 16px;
+}
+
+/* =======================
+   TABLE
+======================= */
 .team-table {
   width: 100%;
-  margin-top: 30px;
+  margin-top: 20px;
   border-collapse: collapse;
+  table-layout: fixed; /* forces equal compact spacing */
 }
 
-.team-table tr {
-  background: #ffffff;
-  border-top: 1px solid #000000;
-  border-bottom: 1px solid #000000;
-  padding: 16px;
-  width: 100%;
-  text-align: left;
-  font-weight: 600;
-  color: #184E7F;
-}
-
+/* Reduce header spacing */
 .team-table th {
-  background: #ffffff;
-  border-top: 1px solid #000000;
-  border-bottom: 1px solid #000000;
-  padding: 16px;
+  padding: 10px 6px;
   text-align: left;
   font-weight: 600;
+  font-size: 14px;
   color: #184E7F;
+  border-bottom: 1px solid #c9c9c9;
 }
 
+/* Compact row spacing */
 .team-table td {
-  padding: 16px;
-  border-bottom: 1px solid #eee;
+  padding: 8px 6px;
   font-size: 14px;
   color: #2b3b46;
+  border-bottom: 1px solid #eee;
+  white-space: nowrap;
 }
 
-.edit-btn {
-  background: none;
-  border: none;
-  color: #000000;
-  cursor: pointer;
+/* Fix column widths */
+.team-table th:nth-child(1),
+.team-table td:nth-child(1) {
+  width: 8%;
 }
 
+.team-table th:nth-child(2),
+.team-table td:nth-child(2) {
+  width: 8%;
+}
+
+.team-table th:nth-child(3),
+.team-table td:nth-child(3) {
+  width: 8%;
+}
+
+.team-table th:nth-child(4),
+.team-table td:nth-child(4) {
+  width: 8%;
+}
+
+.team-table th:nth-child(5),
+.team-table td:nth-child(5) {
+  width: 10%;
+}
+
+.team-table td:last-child,
+.team-table th:last-child {
+  width: 1%;
+  text-align: right;      
+  padding-right: 12px;    
+}
+
+
+.no-users {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+}
+
+/* =======================
+   USER INFO (Avatar + Name)
+======================= */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.role-text {
+  text-transform: capitalize;
+}
+
+/* =======================
+   ACTION BUTTONS
+======================= */
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+
+.edit-btn,
 .delete-btn {
   background: none;
   border: none;
-  color: #000000;
+  color: #000;
   cursor: pointer;
+  font-size: 18px;
+  margin-right: 8px;
 }
 
-.team-Add{
+/* =======================
+   ADD MEMBER BUTTON
+======================= */
+.team-add {
   display: flex;
   justify-content: flex-end;
   padding: 30px;
 }
 
 .add-member-btn {
-  margin-left: 12px;
   background: #184E7F;
-  color: #ffffff;
+  color: #fff;
   width: 160px;
   height: 40px;
   border: none;
   cursor: pointer;
   border-radius: 8px;
+  font-size: 14px;
 }
-
-.no-users { text-align:center; padding:20px; color:#666; }

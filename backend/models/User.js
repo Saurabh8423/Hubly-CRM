@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     phone: { type: String, trim: true, default: "" },
 
-    avatar: { type: String, default: "" }, // ADD THIS 🔥
+    avatar: { type: String, default: "" }, 
 
     role: {
       type: String,

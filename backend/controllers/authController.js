@@ -16,13 +16,9 @@ export const signup = async (req, res) => {
     if (exists) {
       return res.status(400).json({ success: false, message: "Email already registered" });
     }
-
-    // check lowercase role
-    const adminExists = await User.exists({ role: "admin" });
-
-    // assign lowercase valid enum values
-    const role = adminExists ? "member" : "admin";
-
+    
+    // Every new user becomes MEMBER
+    const role = "member";
 
     const hashed = await bcrypt.hash(password, 10);
 

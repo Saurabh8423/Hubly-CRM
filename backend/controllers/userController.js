@@ -23,7 +23,6 @@ export const createUser = async (req, res) => {
 
     const hashed = await bcrypt.hash("Hubly@123", 10); // default
 
-
     const user = new User({
       firstName,
       lastName,

@@ -1,12 +1,20 @@
 import React, { useEffect, useState } from "react";
 import api from "../../../api/api";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./Settings.css";
 
 const Settings = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const localUser = JSON.parse(localStorage.getItem("user"));
 
-  const savedEditUser = localStorage.getItem("editUser");
-  const targetUser = savedEditUser ? JSON.parse(savedEditUser) : localUser;
+  // From Team Page
+  const editUserFromTeam = JSON.parse(localStorage.getItem("editUser"));
+  const editingUser = editUserFromTeam || localUser;
+
+  const isSelf = localUser._id === editingUser._id;
+  const isAdmin = localUser.role === "admin";
 
   const [form, setForm] = useState({
     firstName: "",
@@ -18,17 +26,17 @@ const Settings = () => {
   });
 
   useEffect(() => {
-    if (targetUser) {
+    if (editingUser) {
       setForm({
-        firstName: targetUser.firstName || "",
-        lastName: targetUser.lastName || "",
-        email: targetUser.email || "",
-        phone: targetUser.phone || "",
+        firstName: editingUser.firstName || "",
+        lastName: editingUser.lastName || "",
+        email: editingUser.email || "",
+        phone: editingUser.phone || "",
         password: "",
         confirmPassword: "",
       });
     }
-  }, [targetUser]);
+  }, [editingUser]);
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -43,32 +51,53 @@ const Settings = () => {
     const payload = {
       firstName: form.firstName,
       lastName: form.lastName,
-      phone: form.phone, // <-- phone editable now
+      phone: form.phone,
     };
 
-    // Email is NOT editable, so it is not included in payload
+    // Email editable only by admin
+    if (isAdmin) {
+      payload.email = form.email;
+    }
 
     if (form.password) {
       payload.password = form.password;
     }
 
     try {
-      const res = await api.put(`/users/${targetUser._id}`, payload);
+      const res = await api.put(`/users/${editingUser._id}`, payload);
       const updatedUser = res.data.user;
 
       alert("Profile updated successfully");
 
-      if (localUser._id === targetUser._id) {
+      // Update localStorage only if editing yourself
+      if (isSelf) {
         localStorage.setItem("user", JSON.stringify(updatedUser));
       }
 
+      // Clear temp edit user
       localStorage.removeItem("editUser");
 
+      // ------------------------------
+      // 🔥 PASSWORD CHANGE LOGIC
+      // ------------------------------
       if (form.password) {
-        alert("Password changed. Please login again.");
-        localStorage.removeItem("user");
-        window.location.href = "/";
+        if (isSelf) {
+          alert("Password changed — please login again");
+          localStorage.removeItem("user");
+          navigate("/");
+          return;
+        }
+
+        // Admin editing member → NO logout
+        alert("Member password updated successfully");
+        return;
       }
+
+      // ------------------------------
+      // 🔥 NAME UPDATE ONLY → STAY HERE
+      // ------------------------------
+      return;
+
     } catch (err) {
       console.error(err);
       alert(err.response?.data?.message || "Update failed");
@@ -80,7 +109,7 @@ const Settings = () => {
       <h1>Settings</h1>
 
       <div className="edit-container">
-        <h2 className="settings__title">Edit Profile</h2>
+        <h2>Edit Profile</h2>
 
         <form className="edit-form" onSubmit={handleSave}>
 
@@ -107,7 +136,7 @@ const Settings = () => {
             <input
               name="email"
               value={form.email}
-              disabled
+              disabled={!isAdmin} // <-- ONLY admin can edit email
             />
           </div>
 
