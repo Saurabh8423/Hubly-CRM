@@ -16,13 +16,15 @@ dotenv.config();
 const app = express();
 
 app.use(cors({
-  origin: "https://hubly-crm-two.vercel.app",
+  origin: [
+    "http://localhost:3000",
+    "https://hubly-crm-two.vercel.app",
+    "https://hubly-42bi9m38f-saurabh8423s-projects.vercel.app"
+  ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true,
+  credentials: true
 }));
-
-app.options("", cors());
 
 
 app.use(helmet());
