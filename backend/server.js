@@ -19,7 +19,6 @@ app.use(cors({
   origin: [
     "http://localhost:3000",
     "https://hubly-crm-two.vercel.app",
-    "https://hubly-42bi9m38f-saurabh8423s-projects.vercel.app"
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
