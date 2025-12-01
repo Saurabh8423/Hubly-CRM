@@ -78,7 +78,7 @@ const Settings = () => {
       localStorage.removeItem("editUser");
 
       // ------------------------------
-      // 🔥 PASSWORD CHANGE LOGIC
+      //  PASSWORD CHANGE LOGIC
       // ------------------------------
       if (form.password) {
         if (isSelf) {
@@ -94,7 +94,7 @@ const Settings = () => {
       }
 
       // ------------------------------
-      // 🔥 NAME UPDATE ONLY → STAY HERE
+      //  NAME UPDATE ONLY → STAY HERE
       // ------------------------------
       return;
 

@@ -38,8 +38,15 @@
   text-decoration: none;
 }
 
-@media (max-width: 760px) {
-  .hb-nav {
+/* Hide header when ChatPanel is open on mobile */
+@media (max-width: 720px) {
+  .hb-header {
+    display: none;
+  }
+}
+
+@media (max-width: 450px) {
+  .hb-header {
     display: none;
   }
 }

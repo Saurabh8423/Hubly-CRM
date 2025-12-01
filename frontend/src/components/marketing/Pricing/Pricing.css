@@ -101,3 +101,15 @@
     background-color: #ffffff;
     border: 1px solid #3A7ABD;
 }
+
+@media (max-width: 720px) {
+  .pricing-container {
+    display: none;
+  }
+}
+
+@media (max-width: 450px) {
+  .pricing-container {
+    display: none;
+  }
+}

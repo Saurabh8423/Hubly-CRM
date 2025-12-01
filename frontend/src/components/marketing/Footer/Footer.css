@@ -76,3 +76,17 @@
     justify-content: flex-start;
   }
 }
+
+
+@media (max-width: 720px) {
+  .hb-footer {
+    display: none;
+  }
+}
+
+
+@media (max-width: 450px) {
+  .hb-footer {
+    display: none;
+  }
+}
