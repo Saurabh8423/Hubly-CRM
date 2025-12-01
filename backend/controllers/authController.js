@@ -17,10 +17,17 @@ export const signup = async (req, res) => {
       return res.status(400).json({ success: false, message: "Email already registered" });
     }
 
-    const adminExists = await User.exists({ role: "Admin" });
-    const role = adminExists ? "Member" : "Admin";
+    // check lowercase role
+    const adminExists = await User.exists({ role: "admin" });
+
+    // assign lowercase valid enum values
+    const role = adminExists ? "member" : "admin";
+
 
     const hashed = await bcrypt.hash(password, 10);
+
+    // Generate avatar BEFORE creating user
+    const avatar = generateAvatar();
 
     const user = await User.create({
       firstName,
@@ -30,9 +37,9 @@ export const signup = async (req, res) => {
       role,
       avatar,
       status: "active",
+      phone: "+1(000)000-0000",
     });
 
-    const avatar = generateAvatar();
 
     const out = {
       _id: user._id,
@@ -42,14 +49,18 @@ export const signup = async (req, res) => {
       phone: user.phone,
       role: user.role,
       status: user.status,
+      avatar: user.avatar,
     };
 
     res.json({ success: true, message: "Account created", user: out });
+
   } catch (err) {
     console.error("SIGNUP ERR:", err);
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
+
+
 
 
 

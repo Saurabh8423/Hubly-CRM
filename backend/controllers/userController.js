@@ -16,28 +16,33 @@ export const getAllUsers = async (req, res) => {
 export const createUser = async (req, res) => {
   try {
     const { firstName, lastName, email, phone, role } = req.body;
-
     const exists = await User.findOne({ email });
     if (exists) {
       return res.status(400).json({ success: false, message: "Email already exists" });
     }
 
+    const hashed = await bcrypt.hash("Hubly@123", 10); // default
+
+
     const user = new User({
       firstName,
       lastName,
       email,
-      phone,
+      phone: phone || "+1(000)000-0000",
       role: role || "member",
+      password: hashed,
     });
+
 
     await user.save();
 
-    res.json({ success: true, user });
+    res.json({ success: true, user: { ...user._doc, password: undefined } });
   } catch (err) {
     console.error("createUser error:", err);
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
+
 
 // ------------------------- UPDATE USER -------------------------
 export const updateUser = async (req, res) => {

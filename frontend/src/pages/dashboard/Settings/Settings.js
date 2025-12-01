@@ -103,7 +103,7 @@ const Settings = () => {
           </div>
 
           <div className="form-group">
-            <label>Email (not editable)</label>
+            <label>Email</label>
             <input
               name="email"
               value={form.email}
@@ -112,20 +112,11 @@ const Settings = () => {
           </div>
 
           <div className="form-group">
-            <label>Phone</label>
-            <input
-              name="phone"
-              value={form.phone}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="form-group">
-            <label>New Password</label>
+            <label>Password</label>
             <input
               name="password"
               type="password"
-              placeholder="Leave blank to keep same"
+              placeholder="New Password"
               value={form.password}
               onChange={handleChange}
             />
