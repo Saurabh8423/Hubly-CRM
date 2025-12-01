@@ -18,10 +18,9 @@ const app = express();
 app.use(cors({
   origin: [
     "http://localhost:3000",
-    "https://hubly-crm-two.vercel.app"
+    "https://hubly-crm-two.vercel.app",
   ],
-  methods: "GET,POST,PUT,DELETE",
-  credentials: true
+  credentials: true,
 }));
 
 app.use(helmet());
