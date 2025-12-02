@@ -11,7 +11,6 @@ cron.schedule("* * * * *", async () => {
     const doc = await Settings.findOne({ key: "global" }).lean();
     const missedTimerMs = doc?.value?.missedTimerMs ?? 10 * 60 * 1000; // default 10 min
 
-
     const now = Date.now();
     const tickets = await Ticket.find({ isMissed: false });
 

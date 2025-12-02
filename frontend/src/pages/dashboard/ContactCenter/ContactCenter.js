@@ -1,3 +1,4 @@
+// ContactCenter.jsx
 import React, { useEffect, useState } from "react";
 import "./ContactCenter.css";
 
@@ -18,6 +19,15 @@ const ContactCenter = () => {
   const [resolvingTicket, setResolvingTicket] = useState(null);
   const [input, setInput] = useState("");
   const [search, setSearch] = useState("");
+
+  // Get current user from localStorage (if present)
+  const currentUser = (() => {
+    try {
+      return JSON.parse(localStorage.getItem("user") || "null");
+    } catch {
+      return null;
+    }
+  })();
 
   useEffect(() => {
     loadAll();
@@ -50,7 +60,7 @@ const ContactCenter = () => {
       if (res.data?.messages) {
         const mapped = res.data.messages.map((m) => ({
           ...m,
-          from: m.senderId ? "agent" : "user", // classify
+          from: m.senderId ? "agent" : "user",
         }));
         setMessages(mapped);
       } else {
@@ -65,16 +75,39 @@ const ContactCenter = () => {
   const handleSend = async () => {
     if (!input.trim() || !selected) return;
 
+    if (selected.status === "Resolved") {
+      return alert("This chat has been resolved and cannot be replied to.");
+    }
+
+    // If the ticket is now assigned to someone else and current user is not the assignee and not admin, block sending
+    const assignedTo = selected?.assignedTo?._id || selected?.assignedTo;
+    const isAdmin = currentUser?.role === "admin";
+    const isAssignee = currentUser && assignedTo && currentUser._id === assignedTo;
+
+    if (!isAdmin && assignedTo && !isAssignee) {
+      return alert("You no longer have access to reply to this chat.");
+    }
+
     try {
-      const res = await sendMessageAPI({ ticketId: selected._id, text: input });
+      const payload = {
+        ticketId: selected._id,
+        text: input.trim(),
+        senderId: currentUser ? currentUser._id : null,
+      };
+
+      const res = await sendMessageAPI(payload);
 
       if (res.data?.message) {
         setMessages((prev) => [
           ...prev,
-          { ...res.data.message, from: res.data.message.senderId ? "agent" : "user" }
+          { ...res.data.message, from: res.data.message.senderId ? "agent" : "user" },
         ]);
         setInput("");
         await loadAll();
+
+        // refresh selected ticket details
+        const updated = (await getTickets({})).data.tickets.find((t) => t._id === selected._id);
+        if (updated) setSelected(updated);
       }
     } catch (err) {
       console.error("send error", err);
@@ -90,6 +123,16 @@ const ContactCenter = () => {
            (t.userName || "").toLowerCase().includes(search.toLowerCase());
   });
 
+  // helper to test if current user can access selected ticket
+  const hasAccess = (ticket) => {
+    if (!ticket) return true;
+    if (!currentUser) return true; // anonymous considered as allowed in UI (depends on your auth)
+    if (currentUser.role === "admin") return true;
+    const assignedId = ticket?.assignedTo?._id || ticket?.assignedTo;
+    if (!assignedId) return true; // unassigned -> open
+    return assignedId === currentUser._id;
+  };
+
   return (
     <div className="hb-contact-wrap">
 
@@ -103,13 +146,16 @@ const ContactCenter = () => {
           {filtered.length ? filtered.map((t) => {
             const isSelected = selected && selected._id === t._id;
             const last = t.lastMessage ? t.lastMessage.text : "";
-            const status = t.status || "Open";
+            const avatar = getAvatar(t._id, t.userName || "", "user");
 
-            const avatar = getAvatar(t._id, t.userName, "user");
+            // Show 'No longer have access' if the currently signed-in user lost access to this chat
+            const access = hasAccess(t);
+            const previewText = !access ? "No longer have access" : last;
 
             return (
-              <div key={t._id} className={`hb-chat-item ${isSelected ? "selected" : ""}`}
-                onClick={() => selectTicket(t)}>
+              <div key={t._id}
+                   className={`hb-chat-item ${isSelected ? "selected" : ""}`}
+                   onClick={() => selectTicket(t)}>
                 
                 <div className="hb-chat-thumb">
                   <img src={avatar} alt="avatar" />
@@ -117,12 +163,9 @@ const ContactCenter = () => {
 
                 <div className="hb-chat-meta">
                   <div className="hb-chat-title">{t.userName || t.userEmail || t.ticketId}</div>
-                  <div className="hb-chat-last">{last}</div>
+                  <div className="hb-chat-last">{previewText}</div>
                 </div>
 
-                <div className={`hb-chat-status ${status.toLowerCase().replace(" ", "-")}`}>
-                  {status}
-                </div>
               </div>
             );
           }) : <div className="hb-empty">No chats found.</div>}
@@ -133,36 +176,61 @@ const ContactCenter = () => {
       <div className="hb-center-panel">
         <div className="hb-center-header">
           <div>{selected ? `Ticket# ${selected.ticketId}` : "Ticket# -"}</div>
-          <div className="hb-home-icon" title="Go to dashboard">🏠</div>
+          <div className="hb-home-icon" title="Go to dashboard">🏠︎</div>
         </div>
 
         <div className="hb-message-area">
           {selected ? (
             <>
-              <div className="hb-date-sep">— {new Date(selected.createdAt).toLocaleDateString()} —</div>
-
               <div className="hb-messages">
-                {messages.length ? messages.map(m => {
+                {messages.length ? messages.map((m, idx) => {
                   const avatar = getAvatar(
-                    m._id,
-                    m.from === "user" ? selected.userName : m.senderName,
-                    m.from === "user" ? "user" : (m.senderRole || "agent")
+                    m._id || `${idx}-${m.text}`,
+                    m.from === "user" ? (selected.userName || "") : (m.senderName || ""),
+                    m.from === "user" ? "user" : "agent"
                   );
 
+                  // render date above message when date changes or it's the first message
+                  const prev = idx > 0 ? messages[idx - 1] : null;
+                  const prevDate = prev ? new Date(prev.createdAt).toDateString() : null;
+                  const thisDate = m.createdAt ? new Date(m.createdAt).toDateString() : null;
+                  const showDate = !prevDate || prevDate !== thisDate;
+
                   return (
-                    <div key={m._id} className={`hb-msg ${m.from === "user" ? "hb-msg-user" : "hb-msg-agent"}`}>
-                      <img className="hb-msg-avatar" src={avatar} alt="avatar" />
-                      <div className="hb-msg-body">{m.text}</div>
-                    </div>
+                    <React.Fragment key={m._id || `${idx}-${m.createdAt || Math.random()}`}>
+                      {showDate && (
+                        <div className="hb-date-inline">— {thisDate} —</div>
+                      )}
+
+                      <div className={`hb-msg-wrap ${m.from === "user" ? "user-side" : "agent-side"}`}>
+                        <img className="hb-msg-avatar" src={avatar} alt="avatar" />
+                        <div className={`hb-msg ${m.from === "user" ? "hb-msg-user" : "hb-msg-agent"}`}>
+                          {m.text}
+                        </div>
+                      </div>
+                    </React.Fragment>
                   );
                 }) : <div className="hb-no-messages">No messages yet.</div>}
               </div>
 
               <div className="hb-reply-area">
-                {selected.isMissed && <div className="hb-missed-note">Replying to missed chat</div>}
+                {/* If current user doesn't have access show locked notice */}
+                {!hasAccess(selected) ? (
+                  <div className="hb-locked-note">This chat is assigned to new team member. You no longer have access.</div>
+                ) : selected.status === "Resolved" ? (
+                  <div className="hb-resolved-banner">This chat has been resolved.</div>
+                ) : (
+                  <>
+                    {selected.isMissed && <div className="hb-missed-note">Replying to missed chat</div>}
 
-                <textarea placeholder="Type here" value={input} onChange={(e) => setInput(e.target.value)} />
-                <button className="hb-send" onClick={handleSend}>➤</button>
+                    <textarea
+                      placeholder="Type here"
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                    />
+                    <button className="hb-send" onClick={handleSend}>➤</button>
+                  </>
+                )}
               </div>
             </>
           ) : <div className="hb-select-note">Select a chat to view messages</div>}
@@ -171,21 +239,50 @@ const ContactCenter = () => {
 
       {/* RIGHT PANEL */}
       <div className="hb-right-panel">
-        <TicketDetails ticket={selected} team={team} onAssignRequest={onAssignRequest} onResolveRequest={onResolveRequest} />
+        <TicketDetails
+          ticket={selected}
+          team={team}
+          onAssignRequest={(ticket, toUserId) => {
+            // open confirm modal in parent
+            setAssigningTicket({ ticket, toUserId });
+          }}
+          onResolveRequest={(ticket, status) => {
+            setResolvingTicket({ ticket, status });
+          }}
+        />
       </div>
 
       {assigningTicket && (
-        <AssignConfirm ticket={assigningTicket.ticket} toUserId={assigningTicket.toUserId}
-          onClose={() => setAssigningTicket(null)} onSuccess={async () => {
-            setAssigningTicket(null); await loadAll(); if (selected) await selectTicket(selected);
-        }}/>
+        <AssignConfirm
+          ticket={assigningTicket.ticket}
+          toUserId={assigningTicket.toUserId}
+          onClose={() => setAssigningTicket(null)}
+          onSuccess={async () => {
+            setAssigningTicket(null);
+            await loadAll();
+            // Refresh selected to reflect assignedTo change
+            if (selected) {
+              const updated = (await getTickets({})).data.tickets.find(t => t._id === selected._id);
+              if (updated) setSelected(updated);
+            }
+          }}
+        />
       )}
 
       {resolvingTicket && (
-        <ResolveConfirm ticket={resolvingTicket.ticket} status={resolvingTicket.status}
-          onClose={() => setResolvingTicket(null)} onSuccess={async () => {
-            setResolvingTicket(null); await loadAll(); if (selected) await selectTicket(selected);
-        }}/>
+        <ResolveConfirm
+          ticket={resolvingTicket.ticket}
+          status={resolvingTicket.status}
+          onClose={() => setResolvingTicket(null)}
+          onSuccess={async () => {
+            setResolvingTicket(null);
+            await loadAll();
+            if (selected) {
+              const updated = (await getTickets({})).data.tickets.find(t => t._id === selected._id);
+              if (updated) setSelected(updated);
+            }
+          }}
+        />
       )}
     </div>
   );

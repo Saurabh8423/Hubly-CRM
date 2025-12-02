@@ -77,7 +77,6 @@
 .ticket-card {
   width: 1295px;
   height: 205px;
-
   background: #fff;
   padding: 18px;
   border-radius: 10px;
@@ -142,8 +141,8 @@
 }
 
 .ticket-username {
-  font-weight: 600;
-  color: #1f2937;
+  font-weight: 500;
+  color: #6b7280;
 }
 
 .ticket-meta {

@@ -3,7 +3,7 @@
   display: grid;
   grid-template-columns: 300px 1fr 360px;
   height: calc(100vh - 20px);
-  background: #f6f7f8;
+  background: #D1D6DA;
   margin-left: 25px;
   box-sizing: border-box;
   align-items: start;
@@ -11,10 +11,11 @@
 
 /* left panel */
 .hb-left-panel {
-  background: #fff;
+  background: #FAFBFC;
   border-radius: 8px;
   padding: 12px;
   border: 1px solid #eceff2;
+  width: 296px;
   height: 100%;
   box-shadow: 0 6px 20px rgba(33, 48, 64, 0.04);
 }
@@ -82,23 +83,12 @@
 .hb-chat-title {
   font-size: 14px;
   font-weight: 600;
-  color: #184f7c;
+  color: #5E9BD5;
 }
 
 .hb-chat-last {
   color: #8b98a6;
   font-size: 12px;
-}
-
-.hb-chat-status {
-  font-size: 12px;
-  padding: 6px 8px;
-  border-radius: 12px;
-  background: #fff;
-  border: 1px solid #eee;
-  color: #213040;
-  font-weight: 600;
-  text-transform: capitalize;
 }
 
 .hb-empty {
@@ -108,7 +98,7 @@
 
 /* center panel */
 .hb-center-panel {
-  background: #fff;
+  background: #ffffff;
   border-radius: 8px;
   border: 1px solid #eceff2;
   display: flex;
@@ -117,13 +107,13 @@
 }
 
 .hb-center-header {
-  padding: 16px;
+  padding: 10px;
   border-bottom: 1px solid #f0f2f4;
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-weight: 600;
-  color: #213040;
+  color: #86898C;
 }
 
 .hb-message-area {
@@ -207,7 +197,7 @@
 
 /* right panel (ticket details) */
 .hb-right-panel {
-  background: #fff;
+  background: #FAFBFC;
   border-radius: 8px;
   padding: 12px;
   border: 1px solid #eceff2;
@@ -251,4 +241,35 @@
   padding: 6px 8px;
   border-radius: 6px;
   background: #f4f6f8;
+}
+
+/* Resolved banner in center panel */
+.hb-resolved-banner {
+  width: 100%;
+  text-align: center;
+  padding: 18px;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #86898C;
+  font-weight: 600;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
+}
+
+/* missed note already exists, keep it red */
+.hb-missed-note {
+  color: #d32f2f;
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+/* tweak dropdown for teammates in right panel (if not already present) */
+.td-assign-box .td-dropdown {
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+/* small style: disabled textarea when resolved (if you prefer visually) */
+.hb-reply-area textarea[disabled] {
+  background: #f0f2f4;
 }

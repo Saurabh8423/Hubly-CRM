@@ -286,8 +286,9 @@
 }
 
 .hb-fab img {
-  width: 32px;
-  height: 32px;
+  width: 60px;
+  height: 60px;
+  color: #ffffff;
   object-fit: contain;
   filter: brightness(0) invert(1);
 }
@@ -305,7 +306,7 @@
 /* responsive */
 @media (max-width:720px) {
   .chat-panel {
-    padding: 20px;
+    /* padding: 20px; */
     margin-right: 12px;
     width: 576px;
     min-height: 200px;

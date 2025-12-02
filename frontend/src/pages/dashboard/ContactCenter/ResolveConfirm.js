@@ -1,4 +1,3 @@
-// ResolveConfirm.jsx
 import React, { useState } from "react";
 import { updateTicketStatus } from "../../../api/tickets";
 
@@ -8,7 +7,10 @@ const ResolveConfirm = ({ ticket, status, onClose, onSuccess }) => {
   const confirm = async () => {
     try {
       setLoading(true);
+
+      // server expects /status/:id with { status }
       await updateTicketStatus(ticket._id, status);
+
       setLoading(false);
       onSuccess && onSuccess();
     } catch (err) {
@@ -26,7 +28,9 @@ const ResolveConfirm = ({ ticket, status, onClose, onSuccess }) => {
       <div style={{marginBottom:12}}>Chat will be {status === "Resolved" ? "closed" : `marked ${status}`}</div>
       <div style={{display:"flex", gap:8, justifyContent:"flex-end"}}>
         <button onClick={onClose} disabled={loading}>Cancel</button>
-        <button onClick={confirm} disabled={loading} style={{background:"#184f7c", color:"#fff"}}>{loading ? "Saving..." : "Confirm"}</button>
+        <button onClick={confirm} disabled={loading} style={{background:"#184f7c", color:"#fff"}}>
+          {loading ? "Saving..." : "Confirm"}
+        </button>
       </div>
     </div>
   );
