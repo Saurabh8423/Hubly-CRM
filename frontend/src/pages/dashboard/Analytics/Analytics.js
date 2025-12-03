@@ -33,16 +33,24 @@ const Analytics = () => {
   const loadStats = async () => {
     try {
       const res = await axios.get("/api/tickets/analytics");
-      setStats(res.data.analytics);
+
+      // FIX: Correct response structure
+      setStats({
+        missedPerWeek: res.data.missedPerWeek || Array(10).fill(0),
+        avgReplyMs: res.data.avgReplyMs || 0,
+        resolvedPercent: res.data.resolvedPercent || 0,
+        totalChats: res.data.totalChats || 0,
+      });
     } catch (err) {
       console.log("Stats error", err);
     }
   };
 
+  // ---------- RENDER MISSED CHATS CHART ----------
   useEffect(() => {
     if (!stats || !chartRef.current) return;
 
-    const missed = (stats.missedPerWeek || Array(10).fill(0)).map(Number);
+    const missed = stats.missedPerWeek.map(Number);
     const labels = missed.map((_, i) => `Week-${i + 1}`);
 
     if (chartInstance.current) chartInstance.current.destroy();
@@ -56,7 +64,7 @@ const Analytics = () => {
             label: "Missed Chats",
             data: missed,
             borderColor: "green",
-            backgroundColor: "rgba(0,255,0,0.2)",
+            backgroundColor: "rgba(0,255,0,0.15)",
             borderWidth: 3,
             fill: true,
             tension: 0.4,
@@ -69,8 +77,8 @@ const Analytics = () => {
 
         scales: {
           y: {
-            beginAtZero: true,
-            suggestedMax: 25,
+            min: 0,
+            max: 25,
             ticks: { stepSize: 5 },
           },
         },
@@ -78,14 +86,16 @@ const Analytics = () => {
     });
   }, [stats]);
 
-
+  // ---------- FORMAT REPLY TIME ----------
   const formatReplyTime = (ms) => {
     if (!ms) return "0 secs";
 
     const sec = Math.round(ms / 1000);
     if (sec < 60) return `${sec} secs`;
+
     const min = Math.round(sec / 60);
     if (min < 60) return `${min} mins`;
+
     const hrs = Math.round(min / 60);
     return `${hrs} hrs`;
   };
@@ -94,13 +104,13 @@ const Analytics = () => {
     <div className="hb-analytics">
       <h2>Analytics</h2>
 
-      {/* MISSED CHATS */}
+      {/* =================== MISSED CHATS GRAPH =================== */}
       <div className="hb-analytics-section">
         <h3 className="green-title">Missed Chats</h3>
         <canvas ref={chartRef} width={900} height={300}></canvas>
       </div>
 
-      {/* AVERAGE REPLY */}
+      {/* =================== AVERAGE REPLY TIME =================== */}
       <div className="hb-analytics-box">
         <div className="box-text">
           <h4>Average Reply time</h4>
@@ -108,7 +118,7 @@ const Analytics = () => {
             For highest customer satisfaction rates you should aim to reply to
             an incoming customer's message in 15 seconds or less. Quick
             responses will get you more conversations, help you earn customers
-            trust and make more sales.
+            trust and make more sales.
           </p>
         </div>
         <div className="box-value green-text">
@@ -116,7 +126,7 @@ const Analytics = () => {
         </div>
       </div>
 
-      {/* RESOLVED TICKETS */}
+      {/* =================== RESOLVED TICKETS CHART =================== */}
       <div className="hb-analytics-box">
         <div className="box-text">
           <h4>Resolved Tickets</h4>
@@ -124,9 +134,10 @@ const Analytics = () => {
             A callback system on a website, as well as proactive invitations,
             help to attract even more customers. A separate round button for
             ordering a call with a small animation helps to motivate more
-            customers to make calls..
+            customers to make calls.
           </p>
         </div>
+
         <div className="circle-progress">
           <svg width="70" height="70">
             <circle
@@ -153,12 +164,13 @@ const Analytics = () => {
           </div>
         </div>
       </div>
-      {/* TOTAL CHATS */}
+
+      {/* =================== TOTAL CHATS =================== */}
       <div className="hb-analytics-box">
         <h4>Total Chats</h4>
         <p>
-          This metric Shows the total number of chats for all Channels for the
-          selected the selected period .
+          This metric shows the total number of chats for all channels for the
+          selected period.
         </p>
         <div className="green-text total-chats">
           {stats ? `${stats.totalChats} Chats` : "0 Chats"}

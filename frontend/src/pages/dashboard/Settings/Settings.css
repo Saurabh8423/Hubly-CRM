@@ -57,6 +57,28 @@
   font-size: 15px;
 }
 
+.password-field {
+  position: relative;
+}
+
+.password-warning {
+  width: 231px;
+  height: 46px;
+  background: #ffffff;
+  color: 7C7C7C;
+  border-radius: 13px;
+  padding: 10px;
+  font-size: 14px;
+  position: absolute;
+  right: -280px;
+  top: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.15);
+}
+
+
 
 .save-settings-btn {
   width: 222px;
@@ -68,11 +90,12 @@
   border-radius: 15px;
   font-size: 18px;
   align-self: flex-end;
-  /* right align button safely */
   margin-top: 20px;
+  margin-right: -800px;
 }
 
 
 .save-settings-btn:hover {
   background: #396ae8;
 }
+

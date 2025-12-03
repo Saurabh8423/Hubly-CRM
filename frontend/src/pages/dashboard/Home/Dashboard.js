@@ -9,6 +9,7 @@ const avatarCache = JSON.parse(localStorage.getItem("ticketAvatars")) || {};
 export default function Dashboard() {
   const [tickets, setTickets] = useState([]);
   const [activeTab, setActiveTab] = useState("all");
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     loadTickets();
@@ -49,13 +50,58 @@ export default function Dashboard() {
     return avatarURL;
   };
 
-  // Filter tickets
-  const filtered = tickets.filter((t) => {
+  // -------------------------------
+  // 🔥 TAB FILTER FIRST
+  // -------------------------------
+  const filteredByTab = tickets.filter((t) => {
     if (activeTab === "all") return true;
     if (activeTab === "resolved") return t.status === "Resolved";
     if (activeTab === "unresolved")
       return t.status === "Open" || t.status === "In Progress";
     return true;
+  });
+
+  // -------------------------------
+  //  SEARCH LOGIC (FULL MATCHES + PARTIAL MATCHES)
+  // -------------------------------
+  const text = search.toLowerCase().trim();
+
+  // Automatic Tab Switching: partial matching
+  useEffect(() => {
+  if (text.startsWith("all")) {
+    setActiveTab("all");
+  } else if (text.startsWith("reso")) {
+    setActiveTab("resolved");
+  } else if (text.startsWith("unres")) {
+    setActiveTab("unresolved");
+  }
+}, [text]);
+
+
+  // -------------------------------
+  // 🔥 SEARCH IN TICKET DATA
+  // -------------------------------
+  const fullyFiltered = filteredByTab.filter((t) => {
+    if (!text) return true;
+
+    const userName =
+      t.userName || t.user?.name || "Unknown User";
+
+    const userPhone =
+      t.userPhone || t.user?.phone || t.phone || "";
+
+    const userEmail =
+      t.userEmail || t.user?.email || t.email || "";
+
+    const lastMessage = t.lastMessage?.text || "";
+
+    return (
+      t.ticketId?.toLowerCase().includes(text) ||
+      userName?.toLowerCase().includes(text) ||
+      userPhone?.toLowerCase().includes(text) ||
+      userEmail?.toLowerCase().includes(text) ||
+      lastMessage?.toLowerCase().includes(text)
+    );
   });
 
   return (
@@ -71,6 +117,8 @@ export default function Dashboard() {
             type="text"
             placeholder="Search for ticket"
             className="dash-search-input"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
         </div>
 
@@ -103,22 +151,15 @@ export default function Dashboard() {
           className="ticket-list"
           style={{ display: "flex", gap: 20, flexDirection: "column" }}
         >
-          {filtered.map((t) => {
-            // 👇 UNIFIED USER INFO (always works)
+          {fullyFiltered.map((t) => {
             const userName =
               t.userName || t.user?.name || "Unknown User";
 
             const userPhone =
-              t.userPhone ||
-              t.user?.phone ||
-              t.phone ||
-              "Not Provided";
+              t.userPhone || t.user?.phone || t.phone || "Not Provided";
 
             const userEmail =
-              t.userEmail ||
-              t.user?.email ||
-              t.email ||
-              "No Email";
+              t.userEmail || t.user?.email || t.email || "No Email";
 
             return (
               <div key={t._id} className="ticket-card">

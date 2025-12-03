@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
 import api from "../../../api/api";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./Settings.css";
 
 const Settings = () => {
   const navigate = useNavigate();
-  const location = useLocation();
 
   const localUser = JSON.parse(localStorage.getItem("user"));
-
-  // From Team Page
   const editUserFromTeam = JSON.parse(localStorage.getItem("editUser"));
   const editingUser = editUserFromTeam || localUser;
 
@@ -20,10 +17,11 @@ const Settings = () => {
     firstName: "",
     lastName: "",
     email: "",
-    phone: "",
     password: "",
     confirmPassword: "",
   });
+
+  const [showPasswordWarning, setShowPasswordWarning] = useState(false);
 
   useEffect(() => {
     if (editingUser) {
@@ -31,15 +29,21 @@ const Settings = () => {
         firstName: editingUser.firstName || "",
         lastName: editingUser.lastName || "",
         email: editingUser.email || "",
-        phone: editingUser.phone || "",
         password: "",
         confirmPassword: "",
       });
     }
   }, [editingUser]);
 
-  const handleChange = (e) =>
+  const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+
+    if (e.target.name === "password" && e.target.value !== "") {
+      setShowPasswordWarning(true);
+    } else if (e.target.name === "password" && e.target.value === "") {
+      setShowPasswordWarning(false);
+    }
+  };
 
   const handleSave = async (e) => {
     e.preventDefault();
@@ -51,53 +55,36 @@ const Settings = () => {
     const payload = {
       firstName: form.firstName,
       lastName: form.lastName,
-      phone: form.phone,
     };
 
-    // Email editable only by admin
-    if (isAdmin) {
-      payload.email = form.email;
-    }
-
-    if (form.password) {
-      payload.password = form.password;
-    }
+    // email ALWAYS not editable
+    // password optional
+    if (form.password) payload.password = form.password;
 
     try {
       const res = await api.put(`/users/${editingUser._id}`, payload);
       const updatedUser = res.data.user;
 
-      alert("Profile updated successfully");
+      // Update localStorage only when editing self
+      if (isSelf) localStorage.setItem("user", JSON.stringify(updatedUser));
 
-      // Update localStorage only if editing yourself
-      if (isSelf) {
-        localStorage.setItem("user", JSON.stringify(updatedUser));
-      }
-
-      // Clear temp edit user
       localStorage.removeItem("editUser");
 
-      // ------------------------------
-      //  PASSWORD CHANGE LOGIC
-      // ------------------------------
+      // 🔥 If password changed
       if (form.password) {
         if (isSelf) {
-          alert("Password changed — please login again");
+          // Logout immediately
           localStorage.removeItem("user");
-          navigate("/");
-          return;
+          localStorage.removeItem("token");
+          navigate("/login");
+        } else {
+          alert("Member password updated successfully");
         }
-
-        // Admin editing member → NO logout
-        alert("Member password updated successfully");
         return;
       }
 
-      // ------------------------------
-      //  NAME UPDATE ONLY → STAY HERE
-      // ------------------------------
-      return;
-
+      // If only name updated → stay here
+      alert("Profile updated successfully");
     } catch (err) {
       console.error(err);
       alert(err.response?.data?.message || "Update failed");
@@ -133,14 +120,10 @@ const Settings = () => {
 
           <div className="form-group">
             <label>Email</label>
-            <input
-              name="email"
-              value={form.email}
-              disabled={!isAdmin} // <-- ONLY admin can edit email
-            />
+            <input name="email" value={form.email} disabled />
           </div>
 
-          <div className="form-group">
+          <div className="form-group password-field">
             <label>Password</label>
             <input
               name="password"
@@ -149,6 +132,12 @@ const Settings = () => {
               value={form.password}
               onChange={handleChange}
             />
+
+            {showPasswordWarning && (
+              <div className="password-warning">
+                User will be logged out immediately
+              </div>
+            )}
           </div>
 
           <div className="form-group">

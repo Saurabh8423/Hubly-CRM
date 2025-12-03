@@ -22,7 +22,7 @@
   width: 100%;
   margin-top: 20px;
   border-collapse: collapse;
-  table-layout: fixed; /* forces equal compact spacing */
+  table-layout: fixed;
 }
 
 /* Reduce header spacing */

@@ -12,13 +12,10 @@ const avatarCache = JSON.parse(localStorage.getItem("teamAvatars")) || {};
 const getAvatar = (user) => {
   const userId = user._id || user.id;
 
-  if (avatarCache[userId]) {
-    return avatarCache[userId];
-  }
+  if (avatarCache[userId]) return avatarCache[userId];
 
-  const name = `${user.firstName || ""} ${user.lastName || ""}`.trim();
-  const isFemale = name.toLowerCase().endsWith("a");
-
+  const full = `${user.firstName || ""} ${user.lastName || ""}`.trim();
+  const isFemale = full.toLowerCase().endsWith("a");
   const randomIndex = Math.floor(Math.random() * 50);
 
   const avatarURL = isFemale
@@ -39,6 +36,9 @@ const Team = () => {
 
   const navigate = useNavigate();
 
+  // =============================
+  // LOAD USERS
+  // =============================
   const loadUsers = async () => {
     try {
       setLoading(true);
@@ -52,7 +52,10 @@ const Team = () => {
     }
   };
 
-  const fetchCurrentUser = async () => {
+  // =============================
+  // LOAD CURRENT LOGGED USER
+  // =============================
+  const fetchCurrentUser = () => {
     try {
       const stored = localStorage.getItem("user");
       if (stored) {
@@ -68,6 +71,9 @@ const Team = () => {
     loadUsers();
   }, []);
 
+  // =============================
+  // DELETE USER
+  // =============================
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this user?")) return;
     try {
@@ -79,6 +85,9 @@ const Team = () => {
     }
   };
 
+  // =============================
+  // ADD USER
+  // =============================
   const handleAddSave = async (form) => {
     try {
       const payload = {
@@ -102,7 +111,7 @@ const Team = () => {
 
   return (
     <div className="team-page">
-      <h2>Team</h2>
+      <h2>Team {currentUser && `(${currentUser.role})`}</h2>
 
       {loading ? (
         <div className="loading">Loading...</div>
@@ -121,7 +130,9 @@ const Team = () => {
           <tbody>
             {users.length === 0 ? (
               <tr>
-                <td colSpan="5" className="no-users">No users found.</td>
+                <td colSpan="5" className="no-users">
+                  No users found.
+                </td>
               </tr>
             ) : (
               users.map((u) => {
@@ -131,7 +142,9 @@ const Team = () => {
                   <tr key={u._id || u.id}>
                     <td className="user-info">
                       <img src={avatar} alt="avatar" className="avatar" />
-                      <span>{`${u.firstName || ""} ${u.lastName || ""}`.trim()}</span>
+                      <span>{`${u.firstName || ""} ${
+                        u.lastName || ""
+                      }`.trim()}</span>
                     </td>
 
                     <td>{u.phone || "-"}</td>
@@ -141,12 +154,16 @@ const Team = () => {
                     </td>
 
                     <td>
+                      {/* EDIT + DELETE only for members */}
                       {u.role === "member" && (
                         <>
                           <button
                             className="edit-btn"
                             onClick={() => {
-                              localStorage.setItem("editUser", JSON.stringify(u));
+                              localStorage.setItem(
+                                "editUser",
+                                JSON.stringify(u)
+                              );
                               navigate("/dashboard/settings", {
                                 state: {
                                   editUserId: u._id,
@@ -156,7 +173,6 @@ const Team = () => {
                           >
                             🖍
                           </button>
-
 
                           <button
                             className="delete-btn"
