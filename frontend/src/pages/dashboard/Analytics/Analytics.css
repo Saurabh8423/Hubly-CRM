@@ -15,8 +15,15 @@
   margin-bottom: 10px;
 }
 
+.hb-analytics-section {
+  width: 702px;  
+  height: 408px;  
+}
+
 .hb-analytics-section canvas {
-  min-height: 300px !important;
+  width: 100% !important;
+  height: 280px !important;   
+  max-height: 408px !important;
 }
 
 

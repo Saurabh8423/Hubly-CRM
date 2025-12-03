@@ -10,6 +10,7 @@ import {
   LinearScale,
   CategoryScale,
   Tooltip,
+  Filler,
 } from "chart.js";
 
 Chart.register(
@@ -18,8 +19,11 @@ Chart.register(
   PointElement,
   LinearScale,
   CategoryScale,
-  Tooltip
+  Tooltip,
+  Filler 
 );
+
+Chart.register(Filler);
 
 const Analytics = () => {
   const [stats, setStats] = useState(null);
@@ -107,7 +111,7 @@ const Analytics = () => {
       {/* =================== MISSED CHATS GRAPH =================== */}
       <div className="hb-analytics-section">
         <h3 className="green-title">Missed Chats</h3>
-        <canvas ref={chartRef} width={900} height={300}></canvas>
+        <canvas ref={chartRef}></canvas>
       </div>
 
       {/* =================== AVERAGE REPLY TIME =================== */}

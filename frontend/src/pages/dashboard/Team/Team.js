@@ -155,7 +155,7 @@ const Team = () => {
 
                     <td>
                       {/* EDIT + DELETE only for members */}
-                      {u.role === "member" && (
+                      {u.role === "member" && u.role === "member" && (
                         <>
                           <button
                             className="edit-btn"
