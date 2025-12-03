@@ -107,7 +107,7 @@ const TicketDetails = ({
 
         {/* COLLAPSIBLE CONTENT */}
         {teamDropdownOpen && (
-          <div className="td-assign-box">
+          <div className="td-assign-box" >
             <div className="td-select" onClick={() => setDropdown(!dropdown)}>
               {assignedUser ? (
                 <div className="td-select-inner">

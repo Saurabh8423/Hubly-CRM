@@ -120,7 +120,7 @@ const ContactCenter = () => {
   const filtered = tickets.filter((t) => {
     if (!search) return true;
     return (t.ticketId || "").toLowerCase().includes(search.toLowerCase()) ||
-           (t.userName || "").toLowerCase().includes(search.toLowerCase());
+      (t.userName || "").toLowerCase().includes(search.toLowerCase());
   });
 
   // helper to test if current user can access selected ticket
@@ -154,9 +154,9 @@ const ContactCenter = () => {
 
             return (
               <div key={t._id}
-                   className={`hb-chat-item ${isSelected ? "selected" : ""}`}
-                   onClick={() => selectTicket(t)}>
-                
+                className={`hb-chat-item ${isSelected ? "selected" : ""}`}
+                onClick={() => selectTicket(t)}>
+
                 <div className="hb-chat-thumb">
                   <img src={avatar} alt="avatar" />
                 </div>
@@ -184,11 +184,54 @@ const ContactCenter = () => {
             <>
               <div className="hb-messages">
                 {messages.length ? messages.map((m, idx) => {
-                  const avatar = getAvatar(
-                    m._id || `${idx}-${m.text}`,
-                    m.from === "user" ? (selected.userName || "") : (m.senderName || ""),
-                    m.from === "user" ? "user" : "agent"
-                  );
+                  // --- NEW AVATAR LOGIC ---
+                  let avatar = "";
+
+                  // If message is from USER → use getAvatar()
+                  if (m.from === "user") {
+                    avatar = getAvatar(
+                      selected._id,
+                      selected.userName || selected.userEmail || "User",
+                      "user"
+                    );
+                  }
+
+                  // If message is from AGENT → use TEAM AVATAR (same as right panel)
+                  if (m.from === "agent") {
+                    const agentData = team.find((t) => t._id === m.senderId);
+
+                    if (agentData) {
+                      const fullName = `${agentData.firstName || ""} ${agentData.lastName || ""}`.trim();
+
+                      const id = agentData._id;
+                      const cache = JSON.parse(localStorage.getItem("teamAvatars")) || {};
+
+                      if (cache[id]) {
+                        avatar = cache[id];
+                      } else {
+                        const isFemale = fullName.toLowerCase().endsWith("a");
+                        const randomIndex = Math.floor(Math.random() * 50);
+                        const url = isFemale
+                          ? `https://randomuser.me/api/portraits/women/${randomIndex}.jpg`
+                          : `https://randomuser.me/api/portraits/men/${randomIndex}.jpg`;
+
+                        cache[id] = url;
+                        localStorage.setItem("teamAvatars", JSON.stringify(cache));
+                        avatar = url;
+                      }
+                    }
+                  }
+
+                  let name = "";
+
+                  if (m.from === "user") {
+                    name = selected.userName || selected.userEmail || "User";
+                  } else {
+                    const agentData = team.find((t) => t._id === m.senderId);
+                    name = agentData
+                      ? `${agentData.firstName} ${agentData.lastName}`
+                      : "Team Member";
+                  }
 
                   // render date above message when date changes or it's the first message
                   const prev = idx > 0 ? messages[idx - 1] : null;
@@ -197,16 +240,25 @@ const ContactCenter = () => {
                   const showDate = !prevDate || prevDate !== thisDate;
 
                   return (
-                    <React.Fragment key={m._id || `${idx}-${m.createdAt || Math.random()}`}>
+                    <React.Fragment key={m._id || `${idx}-${m.createdAt}`}>
                       {showDate && (
                         <div className="hb-date-inline">— {thisDate} —</div>
                       )}
 
                       <div className={`hb-msg-wrap ${m.from === "user" ? "user-side" : "agent-side"}`}>
+
+                        {/* AVATAR */}
                         <img className="hb-msg-avatar" src={avatar} alt="avatar" />
-                        <div className={`hb-msg ${m.from === "user" ? "hb-msg-user" : "hb-msg-agent"}`}>
-                          {m.text}
+
+                        {/* NAME + MESSAGE  */}
+                        <div>
+                          <div className="hb-msg-name">{name}</div>
+
+                          <div className={`hb-msg ${m.from === "user" ? "hb-msg-user" : "hb-msg-agent"}`}>
+                            {m.text}
+                          </div>
                         </div>
+
                       </div>
                     </React.Fragment>
                   );

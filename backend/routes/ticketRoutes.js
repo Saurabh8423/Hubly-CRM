@@ -3,7 +3,7 @@ import {
   createTicket,
   getAllTickets,
   getSingleTicket,
-  assignTicket,
+  assignTicketController ,
   updateTicketStatus,
   getTicketsAnalytics,
 } from "../controllers/ticketController.js";
@@ -23,7 +23,7 @@ router.get("/analytics", getTicketsAnalytics);
 // Other ticket routes
 router.post("/create", createTicket);
 router.get("/", getAllTickets);
-router.put("/:ticketId/assign", assignTicket);
+router.put("/assign/:ticketId", assignTicketController);
 router.put("/status/:id", updateTicketStatus);
 router.get("/:id", getSingleTicket);
 

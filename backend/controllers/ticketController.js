@@ -107,29 +107,32 @@ export const getSingleTicket = async (req, res) => {
 /**
  * assignTicket
  */
-export const assignTicket = async (req, res) => {
+export const assignTicketController = async (req, res) => {
   try {
-    const ticketId = req.params.ticketId;
-    const { assignedTo } = req.body;
+    const { ticketId } = req.params;
+    const { toUserId } = req.body;
 
-    const ticket = await Ticket.findById(ticketId);
-    if (!ticket) return res.status(404).json({ success: false, message: "Ticket not found" });
+    // Validate member exists
+    const user = await User.findById(toUserId);
+    if (!user) return res.status(404).json({ message: "User not found" });
 
-    const newAssigned = assignedTo ? assignedTo : null;
+    // Update ticket
+    const updated = await Ticket.findByIdAndUpdate(
+      ticketId,
+      { assignedTo: toUserId },
+      { new: true }
+    );
 
-    ticket.assignedTo = newAssigned;
-    ticket.status = newAssigned ? "In Progress" : "Open";
-    await ticket.save();
+    if (!updated)
+      return res.status(404).json({ message: "Ticket not found" });
 
-    const populated = await Ticket.findById(ticketId).populate({
-      path: "assignedTo",
-      select: "_id name email role",
+    res.json({
+      message: "Ticket assigned successfully",
+      ticket: updated,
     });
-
-    res.json({ success: true, message: "Ticket assigned", ticket: populated });
   } catch (err) {
-    console.error("assignTicket ERROR:", err);
-    res.status(500).json({ success: false, message: "Server error" });
+    console.error("Assign Error:", err);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -230,7 +233,7 @@ export const getTicketsAnalytics = async (req, res) => {
     // 2️⃣ AVERAGE REPLY TIME (REAL TIME)
     // ----------------------------------------------------
     // We detect: first customer message → first team reply
-    const replyTimes = {}; 
+    const replyTimes = {};
 
     messages.forEach((msg) => {
       const tid = msg.ticketId.toString();

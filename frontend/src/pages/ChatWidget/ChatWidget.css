@@ -326,6 +326,11 @@
     border-top-left-radius: 5px;
   }
 
+  .row-user {
+    justify-content: flex-end;
+    margin-right: 20px;
+  }
+
   .chat-popup {
     right: 40px;
   }
@@ -358,9 +363,15 @@
     width: 100%;
   }
 
+
   .chat-panel-header {
     border-top-right-radius: 5px;
     border-top-left-radius: 5px;
+  }
+
+  .row-user {
+    justify-content: flex-end;
+    margin-right: 20px;
   }
 
   .chat-popup {
