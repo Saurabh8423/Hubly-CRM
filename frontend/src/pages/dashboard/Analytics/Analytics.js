@@ -43,7 +43,7 @@ const Analytics = () => {
         missedPerWeek: res.data.missedPerWeek || Array(10).fill(0),
         avgReplyMs: res.data.avgReplyMs || 0,
         resolvedPercent: res.data.resolvedPercent || 0,
-        totalChats: res.data.totalChats || 0,
+        totalChats: res.data.totalChats ?? 0,
       });
     } catch (err) {
       console.log("Stats error", err);

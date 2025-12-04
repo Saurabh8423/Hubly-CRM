@@ -16,7 +16,7 @@ export const signup = async (req, res) => {
     if (exists) {
       return res.status(400).json({ success: false, message: "Email already registered" });
     }
-    
+
     // Every new user becomes MEMBER
     const role = "member";
 
@@ -58,8 +58,6 @@ export const signup = async (req, res) => {
 
 
 
-
-
 // ---------- LOGIN ----------
 export const login = async (req, res) => {
   try {
@@ -78,7 +76,7 @@ export const login = async (req, res) => {
         .json({ success: false, message: "Incorrect password" });
 
     const token = jwt.sign(
-      { _id: user._id, role: user.role },
+      { _id: user._id, role: user.role },  // No need to lowercase again
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
@@ -89,12 +87,12 @@ export const login = async (req, res) => {
       token,
       user: {
         _id: user._id,
-        name: user.name,
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
         phone: user.phone,
         role: user.role,
+        avatar: user.avatar
       },
     });
   } catch (err) {
@@ -102,3 +100,4 @@ export const login = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
+

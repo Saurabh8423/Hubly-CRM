@@ -1,0 +1,57 @@
+.resolve-confirm-container {
+  position: fixed;
+  right: 15px;
+  top: 490px;
+  z-index: 9999;
+  background: #fff;
+  padding: 18px;
+  border-radius: 23px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  width: 290px;
+  height: 80px;
+}
+
+.resolve-confirm-message {
+  margin-bottom: 12px;
+  font-size: 15px;
+  color: #222;
+}
+
+.resolve-confirm-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+/* Buttons */
+.resolve-btn {
+    margin-top: 10px;
+  width: 100px;
+  height: 34px;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* Cancel button */
+.cancel-btn {
+  background: #ddd;
+  color: #333;
+}
+
+.cancel-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Confirm button */
+.confirm-btn {
+  background: #184f7c;
+  color: #fff;
+}
+
+.confirm-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

@@ -217,6 +217,13 @@
   border: 1px solid #e6eef7;
 }
 
+.hb-locked-note {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+
 .hb-send {
   align-self: flex-end;
   width: 44px;

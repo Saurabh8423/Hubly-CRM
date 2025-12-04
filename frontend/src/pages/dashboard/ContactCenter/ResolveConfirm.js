@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { updateTicketStatus } from "../../../api/tickets";
+import "./ResolveConfirm.css";
 
 const ResolveConfirm = ({ ticket, status, onClose, onSuccess }) => {
   const [loading, setLoading] = useState(false);
@@ -8,7 +9,6 @@ const ResolveConfirm = ({ ticket, status, onClose, onSuccess }) => {
     try {
       setLoading(true);
 
-      // server expects /status/:id with { status }
       await updateTicketStatus(ticket._id, status);
 
       setLoading(false);
@@ -21,14 +21,26 @@ const ResolveConfirm = ({ ticket, status, onClose, onSuccess }) => {
   };
 
   return (
-    <div style={{
-      position:"fixed", right:120, top:180, zIndex:9999, background:"#fff", padding:18,
-      borderRadius:14, boxShadow:"0 12px 30px rgba(0,0,0,0.15)"
-    }}>
-      <div style={{marginBottom:12}}>Chat will be {status === "Resolved" ? "closed" : `marked ${status}`}</div>
-      <div style={{display:"flex", gap:8, justifyContent:"flex-end"}}>
-        <button onClick={onClose} disabled={loading}>Cancel</button>
-        <button onClick={confirm} disabled={loading} style={{background:"#184f7c", color:"#fff"}}>
+    <div className="resolve-confirm-container">
+      <div className="resolve-confirm-message">
+        Chat will be{" "}
+        {status === "Resolved" ? "closed" : `marked ${status}`}
+      </div>
+
+      <div className="resolve-confirm-actions">
+        <button
+          className="resolve-btn cancel-btn"
+          onClick={onClose}
+          disabled={loading}
+        >
+          Cancel
+        </button>
+
+        <button
+          className="resolve-btn confirm-btn"
+          onClick={confirm}
+          disabled={loading}
+        >
           {loading ? "Saving..." : "Confirm"}
         </button>
       </div>

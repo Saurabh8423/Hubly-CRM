@@ -279,15 +279,14 @@ export const getTicketsAnalytics = async (req, res) => {
     // ----------------------------------------------------
     const totalChats = messages.length;
 
-    res.json({
-      success: true,
-      analytics: {
-        missedPerWeek,
-        avgReplyMs,
-        resolvedPercent,
-        totalChats,
-      },
+    return res.json({
+      missedPerWeek,
+      avgReplyMs,
+      resolvedPercent,
+      totalChats,
     });
+
+
 
   } catch (err) {
     console.error("ANALYTICS ERROR:", err);
