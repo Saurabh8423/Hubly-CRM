@@ -1,10 +1,9 @@
-import API  from "./api"; 
+import api from "./api";
 
-export const getUsers = () => API.get("/users"); // GET /api/users
-export const getUserById = (id) => API.get(`/users/${id}`);
-export const createUser = (payload) => API.post("/users", payload);
-export const updateUser = (id, payload) => API.put(`/users/${id}`, payload);
-export const deleteUser = (id) => API.delete(`/users/${id}`);
+export const getUsers = () => api.get("/users");
+export const getUserById = (id) => api.get(`/users/${id}`);
+export const createUser = (payload) => api.post("/users", payload);
+export const updateUser = (id, payload) => api.put(`/users/${id}`, payload);
+export const deleteUser = (id) => api.delete(`/users/${id}`);
 
-// optional: fetch current user if your backend exposes it
-export const getCurrentUser = () => API.get("/auth/me");
+export const getCurrentUser = () => api.get("/auth/me");

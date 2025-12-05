@@ -8,6 +8,9 @@ const Settings = () => {
 
   const localUser = JSON.parse(localStorage.getItem("user"));
   const editUserFromTeam = JSON.parse(localStorage.getItem("editUser"));
+
+  // If admin clicked edit → edit that user
+  // If member clicked edit → edit self
   const editingUser = editUserFromTeam || localUser;
 
   const isSelf = localUser._id === editingUser._id;
@@ -38,10 +41,8 @@ const Settings = () => {
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
 
-    if (e.target.name === "password" && e.target.value !== "") {
-      setShowPasswordWarning(true);
-    } else if (e.target.name === "password" && e.target.value === "") {
-      setShowPasswordWarning(false);
+    if (e.target.name === "password") {
+      setShowPasswordWarning(e.target.value !== "");
     }
   };
 
@@ -57,8 +58,7 @@ const Settings = () => {
       lastName: form.lastName,
     };
 
-    // email ALWAYS not editable
-    // password optional
+    // Password optional
     if (form.password) payload.password = form.password;
 
     try {
@@ -66,11 +66,14 @@ const Settings = () => {
       const updatedUser = res.data.user;
 
       // Update localStorage only when editing self
-      if (isSelf) localStorage.setItem("user", JSON.stringify(updatedUser));
+      if (isSelf) {
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+      }
 
+      // Remove editing user once saved
       localStorage.removeItem("editUser");
 
-      // 🔥 If password changed
+      // If password updated
       if (form.password) {
         if (isSelf) {
           // Logout immediately
@@ -83,8 +86,8 @@ const Settings = () => {
         return;
       }
 
-      // If only name updated → stay here
       alert("Profile updated successfully");
+
     } catch (err) {
       console.error(err);
       alert(err.response?.data?.message || "Update failed");
@@ -120,7 +123,11 @@ const Settings = () => {
 
           <div className="form-group">
             <label>Email</label>
-            <input name="email" value={form.email} disabled />
+            <input
+              name="email"
+              value={form.email}
+              disabled
+            />
           </div>
 
           <div className="form-group password-field">

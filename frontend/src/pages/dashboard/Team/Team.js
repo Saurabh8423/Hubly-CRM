@@ -142,9 +142,8 @@ const Team = () => {
                   <tr key={u._id || u.id}>
                     <td className="user-info">
                       <img src={avatar} alt="avatar" className="avatar" />
-                      <span>{`${u.firstName || ""} ${
-                        u.lastName || ""
-                      }`.trim()}</span>
+                      <span>{`${u.firstName || ""} ${u.lastName || ""
+                        }`.trim()}</span>
                     </td>
 
                     <td>{u.phone || "-"}</td>
@@ -155,7 +154,7 @@ const Team = () => {
 
                     <td>
                       {/* EDIT + DELETE only for members */}
-                      {u.role === "member" && u.role === "member" && (
+                      {u.role?.toLowerCase() === "member" && (
                         <>
                           <button
                             className="edit-btn"

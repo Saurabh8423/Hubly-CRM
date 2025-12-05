@@ -20,16 +20,15 @@ Chart.register(
   LinearScale,
   CategoryScale,
   Tooltip,
-  Filler 
+  Filler
 );
-
-Chart.register(Filler);
 
 const Analytics = () => {
   const [stats, setStats] = useState(null);
   const chartRef = useRef();
   const chartInstance = useRef();
 
+  // ================= LOAD ANALYTICS DATA =================
   useEffect(() => {
     loadStats();
   }, []);
@@ -38,7 +37,6 @@ const Analytics = () => {
     try {
       const res = await axios.get("/api/tickets/analytics");
 
-      // FIX: Correct response structure
       setStats({
         missedPerWeek: res.data.missedPerWeek || Array(10).fill(0),
         avgReplyMs: res.data.avgReplyMs || 0,
@@ -50,7 +48,7 @@ const Analytics = () => {
     }
   };
 
-  // ---------- RENDER MISSED CHATS CHART ----------
+  // ================= RENDER MISSED CHATS GRAPH =================
   useEffect(() => {
     if (!stats || !chartRef.current) return;
 
@@ -78,7 +76,6 @@ const Analytics = () => {
       options: {
         responsive: true,
         maintainAspectRatio: false,
-
         scales: {
           y: {
             min: 0,
@@ -90,7 +87,7 @@ const Analytics = () => {
     });
   }, [stats]);
 
-  // ---------- FORMAT REPLY TIME ----------
+  // ================= FORMAT REPLY TIME =================
   const formatReplyTime = (ms) => {
     if (!ms) return "0 secs";
 
@@ -108,37 +105,34 @@ const Analytics = () => {
     <div className="hb-analytics">
       <h2>Analytics</h2>
 
-      {/* =================== MISSED CHATS GRAPH =================== */}
+      {/* ----------- MISSED CHATS GRAPH ----------- */}
       <div className="hb-analytics-section">
         <h3 className="green-title">Missed Chats</h3>
         <canvas ref={chartRef}></canvas>
       </div>
 
-      {/* =================== AVERAGE REPLY TIME =================== */}
+      {/* ----------- AVERAGE REPLY TIME ----------- */}
       <div className="hb-analytics-box">
         <div className="box-text">
-          <h4>Average Reply time</h4>
+          <h4>Average Reply Time</h4>
           <p>
-            For highest customer satisfaction rates you should aim to reply to
-            an incoming customer's message in 15 seconds or less. Quick
-            responses will get you more conversations, help you earn customers
-            trust and make more sales.
+            Quick replies improve customer satisfaction and increase
+            conversations. Aim to respond within 15 seconds for best results.
           </p>
         </div>
+
         <div className="box-value green-text">
           {stats ? formatReplyTime(stats.avgReplyMs) : "0 secs"}
         </div>
       </div>
 
-      {/* =================== RESOLVED TICKETS CHART =================== */}
+      {/* ----------- RESOLVED TICKETS % ----------- */}
       <div className="hb-analytics-box">
         <div className="box-text">
           <h4>Resolved Tickets</h4>
           <p>
-            A callback system on a website, as well as proactive invitations,
-            help to attract even more customers. A separate round button for
-            ordering a call with a small animation helps to motivate more
-            customers to make calls.
+            Measures how many support tickets were successfully resolved by your
+            team.
           </p>
         </div>
 
@@ -159,22 +153,24 @@ const Analytics = () => {
               stroke="#00c853"
               strokeWidth="6"
               fill="none"
-              strokeDasharray={`${(stats?.resolvedPercent || 80) * 1.88} 188`}
+              strokeDasharray={`${
+                (stats?.resolvedPercent || 0) * 1.88
+              } 188`}
               strokeLinecap="round"
             />
           </svg>
           <div className="circle-text">
-            {stats ? `${stats.resolvedPercent}%` : "80%"}
+            {stats ? `${stats.resolvedPercent}%` : "0%"}
           </div>
         </div>
       </div>
 
-      {/* =================== TOTAL CHATS =================== */}
+      {/* ----------- TOTAL CHATS ----------- */}
       <div className="hb-analytics-box">
         <h4>Total Chats</h4>
         <p>
-          This metric shows the total number of chats for all channels for the
-          selected period.
+          This metric shows the total number of chats across all customer
+          channels.
         </p>
         <div className="green-text total-chats">
           {stats ? `${stats.totalChats} Chats` : "0 Chats"}

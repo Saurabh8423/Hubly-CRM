@@ -103,14 +103,15 @@
 }
 
 /* Right side image panel */
-.signup-right {
+.login-right {
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.signup-image {
+.login-image {
+  margin-left: 150px;
   width: 541px;
   height: 100%;
   object-fit: cover;

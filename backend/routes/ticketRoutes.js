@@ -4,21 +4,16 @@ import {
   getAllTickets,
   getSingleTicket,
   assignTicketController,
-  updateTicketStatus
+  updateTicketStatus,
+  getTicketsAnalytics
 } from "../controllers/ticketController.js";
-
-import { getAnalytics } from "../controllers/analyticsController.js";
 
 const router = express.Router();
 
-// ----------------------
-// MAIN ANALYTICS
-// ----------------------
-router.get("/analytics", getAnalytics);
+// Analytics Route
+router.get("/analytics", getTicketsAnalytics);
 
-// --------------------------
-// TICKET ROUTES
-// --------------------------
+// Ticket Routes
 router.post("/create", createTicket);
 router.get("/", getAllTickets);
 router.put("/assign/:ticketId", assignTicketController);
