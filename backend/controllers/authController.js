@@ -20,7 +20,6 @@ export const signup = async (req, res) => {
     // Every new user becomes MEMBER
     const role = "member";
 
-    const hashed = await bcrypt.hash(password, 10);
 
     // Generate avatar BEFORE creating user
     const avatar = generateAvatar();
@@ -29,7 +28,7 @@ export const signup = async (req, res) => {
       firstName,
       lastName,
       email,
-      password: hashed,
+      password,
       role,
       avatar,
       status: "active",
@@ -47,7 +46,7 @@ export const signup = async (req, res) => {
       status: user.status,
       avatar: user.avatar,
     };
-
+    
     res.json({ success: true, message: "Account created", user: out });
 
   } catch (err) {

@@ -21,15 +21,13 @@ export const createUser = async (req, res) => {
       return res.status(400).json({ success: false, message: "Email already exists" });
     }
 
-    const hashed = await bcrypt.hash("Hubly@123", 10); // default
-
     const user = new User({
       firstName,
       lastName,
       email,
       phone: phone || "+1(000)000-0000",
       role: role || "member",
-      password: hashed,
+      password: "Hubly@123",
     });
 
 
